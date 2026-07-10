@@ -6,12 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="3710a1f7-8ff6-4314-a643-a750cbf7b6e2" name="Changes" comment="Initial commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BotGui.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BotGui.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Builder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Builder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FarmingBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FarmingBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ImagePreprocessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ImagePreprocessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/SearchBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SearchBot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ButtonReader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ImagineServer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/koordinaten.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +74,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Application.BotGui">
+  <component name="RunManager" selected="Application.koordinaten">
     <configuration name="BotGui" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="BotGui" />
       <module name="BotOCR" />
@@ -115,8 +112,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.BotGui" />
         <item itemvalue="Application.koordinaten" />
+        <item itemvalue="Application.BotGui" />
         <item itemvalue="Application.ButtonReader" />
         <item itemvalue="Application.Builder" />
         <item itemvalue="Application.Main" />
@@ -157,7 +154,23 @@
       <option name="project" value="LOCAL" />
       <updated>1783683101142</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1783693037855</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1783693037855</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1783693160323</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1783693160323</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -174,11 +187,6 @@
           <properties class="java.lang.ClassNotFoundException" package="java.lang" />
           <option name="timeStamp" value="1" />
         </breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/koordinaten.java</url>
-          <line>5</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
