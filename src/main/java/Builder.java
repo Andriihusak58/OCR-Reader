@@ -33,6 +33,9 @@ public class Builder {
             bot.pressIfFound(UiElements.Battle_Machine);
             Thread.sleep(300 + random.nextInt(150));
 
+            bot.pressIfFound(UiElements.Battle_COPTER);
+            Thread.sleep(300 + random.nextInt(150));
+
             Actions.battleHoldClick(Regions.POINT_2, 600 + random.nextInt(200));
             Thread.sleep(300 + random.nextInt(150));
 
@@ -54,7 +57,7 @@ public class Builder {
             bot.pressIfFound(UiElements.OKAY_STAR_BONUS_DC);
             Thread.sleep(500 + random.nextInt(150));
 
-            Actions.zoomOutMany(1002, 1004, 5);
+            Actions.zoomOutMany(1002, 757, 1);
             Thread.sleep(300 + random.nextInt(150));
 
             Actions.battleClick(Regions.ELIXIR_CART);

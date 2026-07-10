@@ -44,19 +44,16 @@ public class SearchBot {
     }
 
     private void collectAndZoomOut() throws Exception {
-        Actions.battleClick(Regions.COLLECT);
-        Thread.sleep(150 + random.nextInt(150));
-
-        Actions.zoomOutMany(1002, 1004, 4);
+        Actions.zoomOutMany(1002, 757, 1);
         Thread.sleep(150 + random.nextInt(150));
     }
 
     public boolean findGoodBase() throws Exception {
         if (!bot.pressIfFound(UiElements.ATTACK)) return false;
-        Thread.sleep(300 + random.nextInt(150));
+        Thread.sleep(400 + random.nextInt(150));
 
         if (!bot.pressIfFound(UiElements.FIND_MATCH)) return false;
-        Thread.sleep(300 + random.nextInt(150));
+        Thread.sleep(400 + random.nextInt(150));
 
         if (!bot.pressIfFound(UiElements.ATTACK_GO)) return false;
         Thread.sleep(3000 + random.nextInt(1000));

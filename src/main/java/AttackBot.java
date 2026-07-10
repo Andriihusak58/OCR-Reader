@@ -43,10 +43,12 @@ public class AttackBot {
         if (shouldStop()) return false;
 
         boolean hasAnyTroop =
-                layout.king != null ||
+                        layout.king != null ||
                         layout.queen != null ||
                         layout.warden != null ||
                         layout.champion != null ||
+                        layout.MINIONPRINCE != null ||
+                        layout.DRAGONDUKE != null ||
                         layout.valkyrie != null ||
                         layout.barbarian != null ||
                         layout.dragon != null ||
@@ -107,6 +109,8 @@ public class AttackBot {
         deployHeroIfPresent("QUEEN", layout.queen, Regions.POINT_1);
         deployHeroIfPresent("WARDEN", layout.warden, Regions.POINT_1);
         deployHeroIfPresent("CHAMPION", layout.champion, Regions.POINT_1);
+        deployHeroIfPresent("DRAGONDUKE", layout.DRAGONDUKE, Regions.POINT_1);
+        deployHeroIfPresent("MINIONPRINCE", layout.MINIONPRINCE, Regions.POINT_1);
     }
 
     private void deployHeroIfPresent(String name, Region heroSlot, Region dropPoint) throws Exception {
@@ -136,6 +140,8 @@ public class AttackBot {
         activateHeroIfPresent("QUEEN", layout.queen);
         activateHeroIfPresent("WARDEN", layout.warden);
         activateHeroIfPresent("CHAMPION", layout.champion);
+        activateHeroIfPresent("DRAGONDUKE", layout.DRAGONDUKE);
+        activateHeroIfPresent("MINIONPRINCE", layout.MINIONPRINCE);
     }
 
     private void activateHeroIfPresent(String name, Region heroSlot) throws Exception {

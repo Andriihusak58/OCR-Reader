@@ -4,7 +4,65 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3710a1f7-8ff6-4314-a643-a750cbf7b6e2" name="Changes" comment="" />
+    <list default="true" id="3710a1f7-8ff6-4314-a643-a750cbf7b6e2" name="Changes" comment="Initial commit">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/ATTACK.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/ATTACK.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/ATTACK_GO.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/ATTACK_GO.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Attack_DC.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/Attack_DC.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/BARBARIAN.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/BARBARIAN.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/BATTLE_BAR.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/BATTLE_BAR_DC.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Battle_Machine.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/Battle_Machine.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/CASE.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/CASE.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/CHAMPION.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/CHAMPION.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/COLLECT.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/COLLECT.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/CONTINUE.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/CONTINUE.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Cannon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/DRAGON.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/DRAGON.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/END_BATTLE.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/END_BATTLE.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/FIND_MATCH.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/FIND_MATCH.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/FIND_MATCH_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/Find_Now.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/Find_Now.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/JUMP_SPELL.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/JUMP_SPELL.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/KING.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/KING.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/MY_ELIXIR.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/MY_GOLD.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/NEXT.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/NEXT.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/OKAY_STAR_BONUS.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/OKAY_STAR_BONUS.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/OKAY_STAR_BONUS_DC.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/OKAY_STAR_BONUS_DC.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/POINT_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/POINT_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/POINT_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/POINT_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/POINT_5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/POINT_6.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/POINT_JUMP_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/QUEEN.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/QUEEN.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/RETURN_HOME.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/RETURN_HOME.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/RETURN_HOME_DC.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/RETURN_HOME_DC.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/SLOT_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/SNEAKY_GOBLIN.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/SNEAKY_GOBLIN.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/SURRENDER.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/SURRENDER_DC.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/SURRENDER_DC.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/SURRENDER_OKAY.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/SURRENDER_OKAY.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/VALKYRIE.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/VALKYRIE.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/WARDEN.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/WARDEN.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/WIZARD.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/WIZARD.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/debug_original.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/debug_processed.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/my_elixir_original.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/my_elixir_processed.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/my_gold_original.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/my_gold_processed.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/AttackBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/AttackBot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BattleBarScanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BattleBarScanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BattleLayout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BattleLayout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Builder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Builder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ButtonReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ButtonReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Regions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Regions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/SearchBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SearchBot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/UiElements.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UiElements.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,6 +78,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Andriihusak58&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Andriihusak58/OCR-Reader.git&quot;,
+    &quot;accountId&quot;: &quot;59a14bdd-1269-4395-9a71-8c13260b46c8&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 5
@@ -29,33 +99,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.BotGui.executor": "Run",
-    "Application.Builder.executor": "Run",
-    "Application.ButtonReader.executor": "Run",
-    "Application.Main.executor": "Run",
-    "Application.koordinaten.executor": "Run",
-    "Maven.BotOCR [clean].executor": "Run",
-    "Maven.BotOCR [package].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "vcs.Git",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.BotGui.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Builder.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ButtonReader.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.koordinaten.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.BotOCR [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.BotOCR [package].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;vcs.Git&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.BotGui">
     <configuration name="BotGui" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="BotGui" />
@@ -95,8 +166,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.BotGui" />
-        <item itemvalue="Application.ButtonReader" />
         <item itemvalue="Application.koordinaten" />
+        <item itemvalue="Application.ButtonReader" />
         <item itemvalue="Application.Builder" />
         <item itemvalue="Application.Main" />
       </list>
@@ -120,10 +191,23 @@
       <workItem from="1778488936450" duration="20000" />
       <workItem from="1778488966587" duration="81000" />
     </task>
+    <task id="LOCAL-00001" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1781373107899</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1781373107899</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -132,6 +216,11 @@
           <properties class="java.lang.ClassNotFoundException" package="java.lang" />
           <option name="timeStamp" value="1" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/koordinaten.java</url>
+          <line>5</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>

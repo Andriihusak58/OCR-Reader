@@ -20,7 +20,9 @@ public class Regions {
     public static final Region SURRENDER_DC = new Region(29, 717, 219, 65);
     public static final Region RETURN_HOME_DC = new Region(837, 860, 250, 105);
 
-    public static final Region Battle_Machine = new Region(140,890, 120,75);
+    public static final Region Battle_Machine = new Region(135,895, 120,75);
+    public static final Region Battle_COPTER = new Region(135,895, 120,75);
+
     public static final Region SLOT_1 = new Region(300,890, 135,90);
 
     public static final Region POINT_1 = new Region(1728, 495, 125, 50);
@@ -35,12 +37,15 @@ public class Regions {
     public static final Region POINT_JUMP_3 = new Region(1323, 550, 100, 100);
     public static final Region POINT_JUMP_4 = new Region(711, 700, 100, 100);
 
-    public static final Region KING = new Region(460, 960, 120, 50);
+    public static final Region KING = new Region(465, 960, 120, 50);
     public static final Region QUEEN = new Region(600, 960, 120, 50);
     public static final Region WARDEN = new Region(750, 960, 120, 30);
     public static final Region CHAMPION = new Region(890, 960, 120, 50);
+    public static final Region DRAGONDUKE = new Region(890, 960, 120, 50);
+    public static final Region MINIONPRINCE = new Region(890, 960, 120, 50);
 
-    public static final Region VALKYRIE = new Region(140, 960, 120, 50);
+
+    public static final Region VALKYRIE = new Region(170, 960, 120, 50);
     public static final Region JUMP_SPELL = new Region(1060, 960, 120, 50);
     public static final Region DRAGON = new Region(140, 960, 120, 50);
     public static final Region WIZARD = new Region(140, 960, 120, 50);
@@ -54,4 +59,6 @@ public class Regions {
 
 
     public static final Region BATTLE_BAR = new Region(130, 960, 1500, 50);
+
+    public static final Region zoom = new Region(1419, 81, 120, 50);
 }

@@ -10,8 +10,8 @@ public class ButtonReader {
             ImagineServer saver = new ImagineServer();
             System.out.println("1 Sekunde...");
             Thread.sleep(1000L);
-            BufferedImage image = reader.capture(Regions.MY_ELIXIR);
-            saver.save(image, "MY_ELIXIR.png");
+            BufferedImage image = reader.capture(Regions.Battle_Machine);
+            saver.save(image, "Battle_Machine.png");
             System.out.println("Fertig!");
         } catch (Exception e) {
         e.printStackTrace();

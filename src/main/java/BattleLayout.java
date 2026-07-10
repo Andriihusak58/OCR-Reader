@@ -9,6 +9,8 @@ public class BattleLayout {
     public Region wizard;
     public Region barbarian;
     public Region SNEAKY_GOBLIN;
+    public Region DRAGONDUKE;
+    public Region MINIONPRINCE;
 };
 
 

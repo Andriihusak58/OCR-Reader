@@ -37,6 +37,9 @@ public class BattleBarScanner {
         layout.queen = findSlot("images/QUEEN.png", 0.70);
         layout.warden = findSlot("images/WARDEN.png", 0.70);
         layout.champion = findSlot("images/CHAMPION.png", 0.70);
+        layout.DRAGONDUKE = findSlot("images/DRAGONDUKE.png", 0.70);
+        layout.MINIONPRINCE = findSlot("images/MINIONPRINCE.png", 0.70);
+
         layout.valkyrie = findSlot("images/VALKYRIE.png", 0.70);
         layout.jumpSpell = findSlot("images/JUMP_SPELL.png", 0.70);
         layout.dragon = findSlot("images/DRAGON.png", 0.70);
