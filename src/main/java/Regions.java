@@ -59,6 +59,4 @@ public class Regions {
 
 
     public static final Region BATTLE_BAR = new Region(130, 960, 1500, 50);
-
-    public static final Region zoom = new Region(1419, 81, 120, 50);
 }
