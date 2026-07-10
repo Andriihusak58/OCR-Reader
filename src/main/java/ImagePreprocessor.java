@@ -16,7 +16,7 @@ public class ImagePreprocessor {
         BufferedImage result = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = result.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g.drawImage(src, 0, 0, w, h, null);
         g.dispose();
 

@@ -7,60 +7,102 @@ public class SearchBot {
     private final BotConfig config;
     private final Random random = new Random();
 
+    private volatile boolean running = true;
+
     public SearchBot(BotConfig config) throws Exception {
         this.config = config;
         this.bot = new Bot();
         this.ocrService = new OcrService();
     }
 
+    public void stop() {
+        running = false;
+    }
+
+    private boolean shouldStop() {
+        return !running;
+    }
+
+    private void sleep(int minMs, int randomAddMs) throws InterruptedException {
+        int total = minMs + random.nextInt(randomAddMs);
+        int waited = 0;
+
+        while (waited < total) {
+            if (shouldStop()) {
+                return;
+            }
+
+            Thread.sleep(100);
+            waited += 100;
+        }
+    }
+
     public void prepareHomeScreen() throws Exception {
         clearPopups();
-        collectAndZoomOut();
     }
 
     private void clearPopups() throws Exception {
 
         if (bot.pressIfFound(UiElements.OKAY_STAR_BONUS)) {
-            Thread.sleep(300 + random.nextInt(390));
+            sleep(300, 390);
         }
 
+        if (shouldStop()) return;
+
         if (bot.pressIfFound(UiElements.CASE)) {
-            Thread.sleep(150 + random.nextInt(150));
+            sleep(150, 150);
+            if (shouldStop()) return;
+
             Actions.battleClick(Regions.CASE);
-            Thread.sleep(150 + random.nextInt(150));
+            sleep(150, 150);
+            if (shouldStop()) return;
+
             Actions.battleClick(Regions.CASE);
-            Thread.sleep(150 + random.nextInt(150));
+            sleep(150, 150);
+            if (shouldStop()) return;
+
             Actions.battleClick(Regions.CASE);
-            Thread.sleep(150 + random.nextInt(150));
+            sleep(150, 150);
+            if (shouldStop()) return;
+
             Actions.battleClick(Regions.CASE);
-            Thread.sleep(1150 + random.nextInt(150));
+            sleep(1150, 150);
+            if (shouldStop()) return;
+
             Actions.battleClick(Regions.CONTINUE);
-            Thread.sleep(150 + random.nextInt(150));
+            sleep(150, 150);
+            if (shouldStop()) return;
         }
 
         if (bot.pressIfFound(UiElements.OKAY_STAR_BONUS)) {
-            Thread.sleep(150 + random.nextInt(150));
+            sleep(150, 150);
         }
     }
 
     private void collectAndZoomOut() throws Exception {
         Actions.zoomOutMany(1002, 757, 1);
-        Thread.sleep(150 + random.nextInt(150));
+        sleep(150, 150);
     }
 
     public boolean findGoodBase() throws Exception {
+
+        collectAndZoomOut();
+
         if (!bot.pressIfFound(UiElements.ATTACK)) return false;
-        Thread.sleep(400 + random.nextInt(150));
+        sleep(400, 150);
+        if (shouldStop()) return false;
 
         if (!bot.pressIfFound(UiElements.FIND_MATCH)) return false;
-        Thread.sleep(400 + random.nextInt(150));
+        sleep(400, 150);
+        if (shouldStop()) return false;
 
         if (!bot.pressIfFound(UiElements.ATTACK_GO)) return false;
-        Thread.sleep(3000 + random.nextInt(1000));
+        sleep(3000, 1000);
+        if (shouldStop()) return false;
 
         int ocrFailCount = 0;
 
-        while (true) {
+        while (running) {
             int gold = ocrService.readStableDigitsAsInt(Regions.GOLD_ATTACK);
             int elixir = ocrService.readStableDigitsAsInt(Regions.ELIXIR_ATTACK);
 
@@ -79,11 +121,13 @@ public class SearchBot {
                     }
 
                     ocrFailCount = 0;
-                    Thread.sleep(3000 + random.nextInt(1000));
+                    sleep(3000, 1000);
+                    if (shouldStop()) return false;
                     continue;
                 }
 
-                Thread.sleep(2500 + random.nextInt(1000));
+                sleep(2500, 1000);
+                if (shouldStop()) return false;
                 continue;
             }
 
@@ -100,7 +144,10 @@ public class SearchBot {
                 return false;
             }
 
-            Thread.sleep(3000 + random.nextInt(1000));
+            sleep(3000, 1000);
+            if (shouldStop()) return false;
         }
+
+        return false; // running став false -> зупинка за запитом
     }
 }

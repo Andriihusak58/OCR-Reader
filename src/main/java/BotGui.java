@@ -1,5 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
+import com.github.kwhat.jnativehook.GlobalScreen;
+import com.github.kwhat.jnativehook.NativeHookException;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 
 public class BotGui {
 
@@ -11,22 +15,50 @@ public class BotGui {
     }
 
     private void create() {
+
+        try {
+            GlobalScreen.registerNativeHook();
+        } catch (NativeHookException ex) {
+            ex.printStackTrace();
+        }
+
+        GlobalScreen.addNativeKeyListener(new NativeKeyListener() {
+            @Override
+            public void nativeKeyPressed(NativeKeyEvent e) {
+                if (e.getKeyCode() == NativeKeyEvent.VC_S) {
+                    if (mainBot != null) {
+                        mainBot.stop();
+                    }
+                    if (builderBot != null) {
+                        builderBot.stop();
+                    }
+                    System.out.println("S pressed - stopping bots");
+                }
+            }
+
+            @Override
+            public void nativeKeyReleased(NativeKeyEvent e) {}
+
+            @Override
+            public void nativeKeyTyped(NativeKeyEvent e) {}
+        });
+
         JFrame frame = new JFrame("Bot Control");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 350);
         frame.setLayout(new GridLayout(0, 2, 8, 8));
 
-        JTextField mainGoldField = new JTextField("99000000");
-        JTextField mainElixirField = new JTextField("99000000");
+        JTextField mainGoldField = new JTextField("9000000");
+        JTextField mainElixirField = new JTextField("9000000");
         JTextField enemyLootField = new JTextField("1000000");
 
-        JTextField builderGoldField = new JTextField("9900000");
-        JTextField builderElixirField = new JTextField("9900000");
+        JTextField builderGoldField = new JTextField("3000000");
+        JTextField builderElixirField = new JTextField("3000000");
 
         JButton startMain = new JButton("Start Main Bot");
-        JButton stopMain = new JButton("Stop Main Bot");
+        JButton stopMain = new JButton("Stop Main Bot = S");
         JButton startBuilder = new JButton("Start Builder Bot");
-        JButton stopBuilder = new JButton("Stop Builder Bot");
+        JButton stopBuilder = new JButton("Stop Builder Bot = S");
 
         frame.add(new JLabel("Main target gold:"));
         frame.add(mainGoldField);

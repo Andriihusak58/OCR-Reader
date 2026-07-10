@@ -4,6 +4,7 @@ public class Builder {
 
     private volatile boolean running = true;
     private final BotConfig config;
+    private final Random random = new Random();
 
     public Builder() {
         this.config = new BotConfig();
@@ -17,57 +18,89 @@ public class Builder {
         running = false;
     }
 
+    private boolean shouldStop() {
+        return !running;
+    }
+
+    private void sleep(int minMs, int randomAddMs) throws InterruptedException {
+        int total = minMs + random.nextInt(randomAddMs);
+        int waited = 0;
+
+        while (waited < total) {
+            if (shouldStop()) {
+                return;
+            }
+
+            Thread.sleep(100);
+            waited += 100;
+        }
+    }
+
     public void run() throws Exception {
         final Bot bot = new Bot();
         final OcrService ocrService = new OcrService();
-        final Random random = new Random();
 
         while (running) {
 
             bot.pressIfFound(UiElements.Attack_DC);
-            Thread.sleep(300 + random.nextInt(150));
+            sleep(300, 150);
+            if (shouldStop()) break;
 
             bot.pressIfFound(UiElements.Find_Now);
-            Thread.sleep(5000 + random.nextInt(1000));
+            sleep(5000, 1000);
+            if (shouldStop()) break;
 
             bot.pressIfFound(UiElements.Battle_Machine);
-            Thread.sleep(300 + random.nextInt(150));
+            sleep(300, 150);
+            if (shouldStop()) break;
 
             bot.pressIfFound(UiElements.Battle_COPTER);
-            Thread.sleep(300 + random.nextInt(150));
+            sleep(300, 150);
+            if (shouldStop()) break;
 
             Actions.battleHoldClick(Regions.POINT_2, 600 + random.nextInt(200));
-            Thread.sleep(300 + random.nextInt(150));
+            sleep(300, 150);
+            if (shouldStop()) break;
 
             Actions.battleClick(Regions.SLOT_1);
-            Thread.sleep(300 + random.nextInt(150));
+            sleep(300, 150);
+            if (shouldStop()) break;
 
             Actions.battleHoldClick(Regions.POINT_2, 1100 + random.nextInt(200));
-            Thread.sleep(60000 + random.nextInt(5000));
+            sleep(60000, 5000);
+            if (shouldStop()) break;
 
             bot.pressIfFound(UiElements.SURRENDER_DC);
-            Thread.sleep(300 + random.nextInt(150));
+            sleep(300, 150);
+            if (shouldStop()) break;
 
             bot.pressIfFound(UiElements.SURRENDER_OKAY);
-            Thread.sleep(500 + random.nextInt(150));
+            sleep(500, 150);
+            if (shouldStop()) break;
 
             bot.pressIfFound(UiElements.RETURN_HOME_DC);
-            Thread.sleep(1500 + random.nextInt(150));
+            sleep(1500, 150);
+            if (shouldStop()) break;
 
             bot.pressIfFound(UiElements.OKAY_STAR_BONUS_DC);
-            Thread.sleep(500 + random.nextInt(150));
+            sleep(500, 150);
+            if (shouldStop()) break;
 
             Actions.zoomOutMany(1002, 757, 1);
-            Thread.sleep(300 + random.nextInt(150));
+            sleep(300, 150);
+            if (shouldStop()) break;
 
             Actions.battleClick(Regions.ELIXIR_CART);
-            Thread.sleep(300 + random.nextInt(150));
+            sleep(300, 150);
+            if (shouldStop()) break;
 
             bot.pressIfFound(UiElements.COLLECT);
-            Thread.sleep(300 + random.nextInt(150));
+            sleep(300, 150);
+            if (shouldStop()) break;
 
             Actions.battleClick(Regions.Attack_DC);
-            Thread.sleep(2000 + random.nextInt(350));
+            sleep(2000, 350);
+            if (shouldStop()) break;
 
             int myGold = ocrService.readStableDigitsAsInt(Regions.MY_GOLD);
             int myElixir = ocrService.readStableDigitsAsInt(Regions.MY_ELIXIR);

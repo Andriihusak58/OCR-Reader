@@ -16,6 +16,7 @@ public class FarmingBot {
 
     public void stop() {
         running = false;
+        searchBot.stop();
         attackBot.stop();
     }
 
@@ -31,6 +32,8 @@ public class FarmingBot {
 
             System.out.println("My gold: " + myGold);
             System.out.println("My elixir: " + myElixir);
+
+
 
             if (!running) break;
 
