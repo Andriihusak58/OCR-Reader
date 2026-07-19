@@ -313,7 +313,7 @@ public class AttackBot {
         if (shouldStop()) return;
 
         Actions.click(Regions.SURRENDER_OKAY);
-        sleep(1500, 2500);
+        sleep(2500, 2500);
 
         if (shouldStop()) return;
 

@@ -66,11 +66,11 @@ public class SearchBot {
             if (shouldStop()) return;
 
             Actions.battleClick(Regions.CASE);
-            sleep(1150, 150);
+            sleep(4150, 150);
             if (shouldStop()) return;
 
             Actions.battleClick(Regions.CONTINUE);
-            sleep(150, 150);
+            sleep(200, 150);
             if (shouldStop()) return;
         }
 

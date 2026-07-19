@@ -40,7 +40,7 @@ public class UiElements {
         ATTACK_GO = new UiElement(Regions.ATTACK_GO, "images/ATTACK_GO.png", 0.7);
         END_BATTLE = new UiElement(Regions.END_BATTLE,"images/END_BATTLE.png",0.7);
         SURRENDER_OKAY = new UiElement(Regions.SURRENDER_OKAY,"images/SURRENDER_OKAY.png",0.7);
-        RETURN_HOME = new UiElement(Regions.RETURN_HOME,"images/RETURN_HOME.png",0.7);
+        RETURN_HOME = new UiElement(Regions.RETURN_HOME,"images/RETURN_HOME.png",0.5);
         OKAY_STAR_BONUS = new UiElement(Regions.OKAY_STAR_BONUS,"images/OKAY_STAR_BONUS.png",0.7);
         OKAY_STAR_BONUS_DC = new UiElement(Regions.OKAY_STAR_BONUS_DC,"images/OKAY_STAR_BONUS_DC.png",0.7);
         CONTINUE = new UiElement(Regions.CONTINUE,"images/CONTINUE.png",0.7);
