@@ -20,8 +20,8 @@ public class GameContext {
     }
 
     /** Гра в Android-емуляторі (LDPlayer): скріншоти й ввід через adb, монітор ПК не потрібен. */
-    public static GameContext adb(String serial) {
-        Adb adb = new Adb(serial);
+    public static GameContext adb(String adbPath, String serial) {
+        Adb adb = new Adb(adbPath, serial);
         return new GameContext(new AdbScreenSource(adb), new AdbInputDevice(adb));
     }
 }
