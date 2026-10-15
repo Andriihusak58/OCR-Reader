@@ -14,8 +14,12 @@ public class AdbInputDevice implements InputDevice {
     private static final int ABS_MT_SLOT = 47, ABS_MT_POSITION_X = 53, ABS_MT_POSITION_Y = 54,
             ABS_MT_TRACKING_ID = 57, ABS_MT_PRESSURE = 58;
 
+    private static final int PINCH_STEPS = 12;      // чим більше, тим довший і плавніший жест
+    private static final int RANDOM_PAUSE_MAX_MS = 150;
+
     private final Adb adb;
     private final String touchDevice;
+    private final java.util.Random random = new java.util.Random();
 
     public AdbInputDevice(Adb adb) {
         this(adb, DEFAULT_TOUCH_DEVICE);
@@ -44,7 +48,10 @@ public class AdbInputDevice implements InputDevice {
     public void zoomOut(int x, int y, int times) throws InterruptedException {
         try {
             for (int i = 0; i < times; i++) {
-                adb.exec("shell", buildPinchScript(x, y, 450, 60, 6, 100 + i * 2));
+                // "людська" випадкова пауза перед і після кожного жесту
+                Thread.sleep(random.nextInt(RANDOM_PAUSE_MAX_MS + 1));
+                adb.exec("shell", buildPinchScript(x, y, 450, 60, PINCH_STEPS, 100 + i * 2));
+                Thread.sleep(random.nextInt(RANDOM_PAUSE_MAX_MS + 1));
             }
         } catch (IOException e) {
             throw new IllegalStateException("ADB zoom failed: " + e.getMessage(), e);
