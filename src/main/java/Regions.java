@@ -1,5 +1,5 @@
 public class Regions {
-    public static final Region ATTACK = new Region(35, 900, 180, 140);
+    public static final Region ATTACK = new Region(28, 862, 198, 198);
     public static final Region FIND_MATCH = new Region(115, 735, 430, 130);
     public static final Region FIND_MATCH_1 = new Region(663, 735, 430, 130);
     public static final Region ATTACK_GO = new Region(1530, 923, 320, 80);
@@ -7,7 +7,7 @@ public class Regions {
     public static final Region END_BATTLE = new Region(29, 773, 219, 65);
     public static final Region SURRENDER = new Region(29, 773, 219, 65);
     public static final Region SURRENDER_OKAY = new Region(1000, 614, 330, 140);
-    public static final Region RETURN_HOME = new Region(837, 875, 250, 105);
+    public static final Region RETURN_HOME = new Region(837, 877, 250, 100);
     public static final Region OKAY_STAR_BONUS = new Region(835, 865, 250, 105);
     public static final Region OKAY_STAR_BONUS_DC = new Region(825, 787, 250, 105);
     public static final Region ELIXIR_CART = new Region(1270, 2,20,30);
@@ -15,10 +15,10 @@ public class Regions {
     public static final Region CASE = new Region(757,738,310,110);
     public static final Region CONTINUE = new Region(835, 865, 250, 105);
 
-    public static final Region Attack_DC = new Region(33,863,180,180);
+    public static final Region Attack_DC = new Region(28, 862, 198, 198);
     public static final Region Find_Now = new Region(1244,650,340,120);
     public static final Region SURRENDER_DC = new Region(29, 717, 219, 65);
-    public static final Region RETURN_HOME_DC = new Region(837, 860, 250, 105);
+    public static final Region RETURN_HOME_DC = new Region(837, 862, 250, 100);
 
     public static final Region Battle_Machine = new Region(135,895, 120,75);
     public static final Region Battle_COPTER = new Region(135,895, 120,75);
@@ -56,8 +56,8 @@ public class Regions {
 
     public static final Region GOLD_ATTACK = new Region(95, 145, 183, 50);
     public static final Region ELIXIR_ATTACK = new Region(95, 200, 183, 50);
-    public static final Region MY_GOLD = new Region(1610, 45,200,30);
-    public static final Region MY_ELIXIR = new Region(1610, 147,200,30);
+    public static final Region MY_GOLD = new Region(1625, 40, 210, 36);
+    public static final Region MY_ELIXIR = new Region(1625, 113, 210, 36);
 
 
     public static final Region BATTLE_BAR = new Region(130, 960, 1500, 50);
