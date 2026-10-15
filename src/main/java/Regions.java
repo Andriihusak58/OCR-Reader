@@ -54,11 +54,11 @@ public class Regions {
     public static final Region BARBARIAN = new Region(140, 960, 120, 50);
     public static final Region SNEAKY_GOBLIN = new Region(140, 960, 120, 50);
 
-    public static final Region GOLD_ATTACK = new Region(95, 145, 183, 50);
-    public static final Region ELIXIR_ATTACK = new Region(95, 200, 183, 50);
+    public static final Region GOLD_ATTACK = new Region(98, 134, 200, 40);
+    public static final Region ELIXIR_ATTACK = new Region(98, 192, 200, 40);
     public static final Region MY_GOLD = new Region(1625, 40, 210, 36);
     public static final Region MY_ELIXIR = new Region(1625, 113, 210, 36);
 
 
-    public static final Region BATTLE_BAR = new Region(130, 960, 1500, 50);
+    public static final Region BATTLE_BAR = new Region(130, 880, 1700, 200);
 }
