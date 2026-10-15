@@ -72,7 +72,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Application.BotGui">
+  <component name="RunManager" selected="Application.ButtonReader">
     <configuration name="BotGui" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="BotGui" />
       <module name="BotOCR" />
@@ -110,10 +110,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ButtonReader" />
         <item itemvalue="Application.BotGui" />
         <item itemvalue="Application.koordinaten" />
         <item itemvalue="Application.ZoomTest" />
-        <item itemvalue="Application.ButtonReader" />
         <item itemvalue="Application.Builder" />
       </list>
     </recent_temporary>
@@ -232,7 +232,15 @@
       <option name="project" value="LOCAL" />
       <updated>1792086742102</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1792087171178</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1792087171178</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
