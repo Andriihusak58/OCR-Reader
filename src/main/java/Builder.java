@@ -83,7 +83,7 @@ public class Builder {
             if (shouldStop()) break;
 
             bot.pressIfFound(UiElements.RETURN_HOME_DC);
-            sleep(1500, 150);
+            sleep(4500, 150);
             if (shouldStop()) break;
 
             bot.pressIfFound(UiElements.OKAY_STAR_BONUS_DC);
