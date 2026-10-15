@@ -25,14 +25,14 @@ public class BotGui {
         GlobalScreen.addNativeKeyListener(new NativeKeyListener() {
             @Override
             public void nativeKeyPressed(NativeKeyEvent e) {
-                if (e.getKeyCode() == NativeKeyEvent.VC_F8) {
+                if (e.getKeyCode() == NativeKeyEvent.VC_F9) {
                     if (mainBot != null) {
                         mainBot.stop();
                     }
                     if (builderBot != null) {
                         builderBot.stop();
                     }
-                    System.out.println("F8 pressed - stopping bots");
+                    System.out.println("F9 pressed - stopping bots");
                 }
             }
 
@@ -60,9 +60,9 @@ public class BotGui {
         JTextField adbPathField = new JTextField("adb");
 
         JButton startMain = new JButton("Start Main Bot");
-        JButton stopMain = new JButton("Stop Main Bot = F8");
+        JButton stopMain = new JButton("Stop Main Bot = F9");
         JButton startBuilder = new JButton("Start Builder Bot");
-        JButton stopBuilder = new JButton("Stop Builder Bot = F8");
+        JButton stopBuilder = new JButton("Stop Builder Bot = F9");
 
         frame.add(new JLabel("Input mode:"));
         frame.add(modeBox);
