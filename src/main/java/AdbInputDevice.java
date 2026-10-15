@@ -44,8 +44,7 @@ public class AdbInputDevice implements InputDevice {
     public void zoomOut(int x, int y, int times) throws InterruptedException {
         try {
             for (int i = 0; i < times; i++) {
-                adb.exec("shell", buildPinchScript(x, y, 450, 60, 12, 100 + i * 2));
-                Thread.sleep(300);
+                adb.exec("shell", buildPinchScript(x, y, 450, 60, 6, 100 + i * 2));
             }
         } catch (IOException e) {
             throw new IllegalStateException("ADB zoom failed: " + e.getMessage(), e);
@@ -66,18 +65,26 @@ public class AdbInputDevice implements InputDevice {
             int y = clamp(cy, 0, SCREEN_H - 1);
 
             if (s == 0) {
-                // обидва пальці торкаються екрана
+                // обидва пальці торкаються екрана: повний набір значень
                 event(sb, EV_ABS, ABS_MT_SLOT, 0);
                 event(sb, EV_ABS, ABS_MT_TRACKING_ID, trackingId);
+                event(sb, EV_ABS, ABS_MT_POSITION_X, lx);
+                event(sb, EV_ABS, ABS_MT_POSITION_Y, y);
+                event(sb, EV_ABS, ABS_MT_PRESSURE, 1);
                 event(sb, EV_ABS, ABS_MT_SLOT, 1);
                 event(sb, EV_ABS, ABS_MT_TRACKING_ID, trackingId + 1);
+                event(sb, EV_ABS, ABS_MT_POSITION_X, rx);
+                event(sb, EV_ABS, ABS_MT_POSITION_Y, y);
+                event(sb, EV_ABS, ABS_MT_PRESSURE, 1);
                 event(sb, EV_KEY, BTN_TOUCH, 1);
+            } else {
+                // далі шлемо лише змінений X (кожен sendevent це окремий процес, тож менше = швидше)
+                event(sb, EV_ABS, ABS_MT_SLOT, 0);
+                event(sb, EV_ABS, ABS_MT_POSITION_X, lx);
+                event(sb, EV_ABS, ABS_MT_SLOT, 1);
+                event(sb, EV_ABS, ABS_MT_POSITION_X, rx);
             }
-
-            finger(sb, 0, lx, y);
-            finger(sb, 1, rx, y);
             event(sb, EV_SYN, 0, 0);
-            sb.append("sleep 0.02;");
         }
 
         // відпустити обидва пальці
@@ -89,13 +96,6 @@ public class AdbInputDevice implements InputDevice {
         event(sb, EV_SYN, 0, 0);
 
         return sb.toString();
-    }
-
-    private void finger(StringBuilder sb, int slot, int x, int y) {
-        event(sb, EV_ABS, ABS_MT_SLOT, slot);
-        event(sb, EV_ABS, ABS_MT_POSITION_X, x);
-        event(sb, EV_ABS, ABS_MT_POSITION_Y, y);
-        event(sb, EV_ABS, ABS_MT_PRESSURE, 1);
     }
 
     private void event(StringBuilder sb, int type, int code, int value) {
