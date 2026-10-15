@@ -3,12 +3,14 @@ import java.util.Random;
 public class AttackBot {
 
     private final BattleBarScanner scanner;
+    private final Actions actions;
     private final Random random = new Random();
 
     private volatile boolean running = true;
 
-    public AttackBot() throws Exception {
-        this.scanner = new BattleBarScanner();
+    public AttackBot(GameContext ctx) {
+        this.scanner = new BattleBarScanner(ctx.screen);
+        this.actions = ctx.actions;
     }
 
     public void stop() {
@@ -121,17 +123,17 @@ public class AttackBot {
             return;
         }
 
-        Actions.battleClick(heroSlot);
+        actions.battleClick(heroSlot);
         sleep(300, 450);
 
         if (shouldStop()) return;
 
-        Actions.battleClick(dropPoint);
+        actions.battleClick(dropPoint);
         sleep(300, 450);
 
         if (shouldStop()) return;
 
-        Actions.battleClick(dropPoint);
+        actions.battleClick(dropPoint);
         sleep(100, 200);
     }
 
@@ -151,7 +153,7 @@ public class AttackBot {
             return;
         }
 
-        Actions.battleClick(heroSlot);
+        actions.battleClick(heroSlot);
         sleep(80, 120);
     }
 
@@ -163,7 +165,7 @@ public class AttackBot {
             return;
         }
 
-        Actions.battleClick(layout.jumpSpell);
+        actions.battleClick(layout.jumpSpell);
         sleep(300, 450);
 
         clickPoint(Regions.POINT_JUMP_1, 300, 450);
@@ -180,7 +182,7 @@ public class AttackBot {
             return;
         }
 
-        Actions.battleClick(layout.valkyrie);
+        actions.battleClick(layout.valkyrie);
         sleep(300, 450);
 
         holdPoint(Regions.POINT_2, 900, 200, 300, 450);
@@ -198,7 +200,7 @@ public class AttackBot {
             return;
         }
 
-        Actions.battleClick(layout.dragon);
+        actions.battleClick(layout.dragon);
         sleep(300, 450);
 
         holdPoint(Regions.POINT_3, 900, 200, 300, 450);
@@ -216,7 +218,7 @@ public class AttackBot {
             return;
         }
 
-        Actions.battleClick(layout.barbarian);
+        actions.battleClick(layout.barbarian);
         sleep(300, 450);
 
         holdPoint(Regions.POINT_5, 900, 200, 300, 450);
@@ -234,7 +236,7 @@ public class AttackBot {
             return;
         }
 
-        Actions.battleClick(layout.wizard);
+        actions.battleClick(layout.wizard);
         sleep(300, 450);
 
         holdPoint(Regions.POINT_4, 900, 200, 300, 450);
@@ -252,7 +254,7 @@ public class AttackBot {
             return;
         }
 
-        Actions.battleClick(layout.SNEAKY_GOBLIN);
+        actions.battleClick(layout.SNEAKY_GOBLIN);
         sleep(300, 450);
 
         Region[] points = {
@@ -287,7 +289,7 @@ public class AttackBot {
     private void clickPoint(Region point, int sleepMin, int sleepRandom) throws Exception {
         if (shouldStop()) return;
 
-        Actions.battleClick(point);
+        actions.battleClick(point);
         sleep(sleepMin, sleepRandom);
     }
 
@@ -300,24 +302,24 @@ public class AttackBot {
     ) throws Exception {
         if (shouldStop()) return;
 
-        Actions.battleHoldClick(point, holdMin + random.nextInt(holdRandom));
+        actions.battleHoldClick(point, holdMin + random.nextInt(holdRandom));
         sleep(sleepMin, sleepRandom);
     }
 
     private void finishBattle() throws Exception {
         if (shouldStop()) return;
 
-        Actions.click(Regions.SURRENDER);
+        actions.click(Regions.SURRENDER);
         sleep(700, 1000);
 
         if (shouldStop()) return;
 
-        Actions.click(Regions.SURRENDER_OKAY);
+        actions.click(Regions.SURRENDER_OKAY);
         sleep(2500, 2500);
 
         if (shouldStop()) return;
 
-        Actions.click(Regions.RETURN_HOME);
+        actions.click(Regions.RETURN_HOME);
         sleep(1500, 2500);
     }
-}
+}

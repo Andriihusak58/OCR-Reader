@@ -2,12 +2,14 @@ import java.awt.image.BufferedImage;
 
 public class Bot {
 
-    private final ScreenReader reader;
+    private final ScreenSource reader;
+    private final Actions actions;
     private final ImageLoader loader;
     private final TemplateMatcher matcher;
 
-    public Bot() throws Exception {
-        this.reader = new ScreenReader();
+    public Bot(GameContext ctx) {
+        this.reader = ctx.screen;
+        this.actions = ctx.actions;
         this.loader = new ImageLoader();
         this.matcher = new TemplateMatcher();
     }
@@ -22,7 +24,7 @@ public class Bot {
         System.out.println("Similarity: " + result.similarity);
 
         if (result.found) {
-            Actions.click(element.region);
+            actions.click(element.region);
             System.out.println("Pressed");
             return true;
         }

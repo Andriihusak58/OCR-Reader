@@ -2,12 +2,12 @@ import java.awt.image.BufferedImage;
 
 public class OcrService {
 
-    private final ScreenReader screenReader;
+    private final ScreenSource screenReader;
     private final TextReader textReader;
     private final ImagineServer saver;
 
-    public OcrService() throws Exception {
-        this.screenReader = new ScreenReader();
+    public OcrService(ScreenSource screen) {
+        this.screenReader = screen;
         this.textReader = new TextReader();
         this.saver = new ImagineServer();
     }
@@ -51,4 +51,4 @@ public class OcrService {
             return -1;
         }
     }
-}
+}

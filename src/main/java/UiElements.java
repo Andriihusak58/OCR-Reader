@@ -36,8 +36,8 @@ public class UiElements {
     static {
         FIND_MATCH = new UiElement(Regions.FIND_MATCH, "images/FIND_MATCH.png", 0.4);
         ATTACK = new UiElement(Regions.ATTACK, "images/ATTACK.png", 0.2);
-        NEXT = new UiElement(Regions.NEXT, "images/NEXT.png", 0.7);
-        ATTACK_GO = new UiElement(Regions.ATTACK_GO, "images/ATTACK_GO.png", 0.7);
+        NEXT = new UiElement(Regions.NEXT, "images/NEXT.png", 0.1);
+        ATTACK_GO = new UiElement(Regions.ATTACK_GO, "images/ATTACK_GO.png", 0.2);
         END_BATTLE = new UiElement(Regions.END_BATTLE,"images/END_BATTLE.png",0.7);
         SURRENDER_OKAY = new UiElement(Regions.SURRENDER_OKAY,"images/SURRENDER_OKAY.png",0.7);
         RETURN_HOME = new UiElement(Regions.RETURN_HOME,"images/RETURN_HOME.png",0.5);
@@ -52,7 +52,7 @@ public class UiElements {
         DRAGONDUKE = new UiElement(Regions.DRAGONDUKE,"images/DRAGONDUKE.png",0.7);
         MINIONPRINCE = new UiElement(Regions.MINIONPRINCE,"images/MINIONPRINCE.png",0.7);
 
-        VALKYRIE = new UiElement(Regions.VALKYRIE,"images/VALKYRIE.png",0.7);
+        VALKYRIE = new UiElement(Regions.VALKYRIE,"images/VALKYRIE.png",0.15);
         JUMP_SPELL = new UiElement(Regions.JUMP_SPELL,"images/JUMP_SPELL.png",0.7);
         DRAGON = new UiElement(Regions.DRAGON,"images/DRAGON.png",0.7);
         WIZARD = new UiElement(Regions.WIZARD,"images/WIZARD.png",0.7);

@@ -1,104 +1,65 @@
-import java.awt.Robot;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.util.Random;
 
+/**
+ * "Людські" дії поверх InputDevice: випадкова точка всередині регіону
+ * і випадкові паузи. Сам ввід виконує InputDevice.
+ */
 public class Actions {
 
-    private static final Random random = new Random();
-    private static final Robot robot;
+    private final InputDevice device;
+    private final Random random = new Random();
 
-    static {
-        try {
-            robot = new Robot();
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot create Robot", e);
-        }
+    public Actions(InputDevice device) {
+        this.device = device;
     }
 
     // Повільний людський клік (меню / кнопки)
-    public static void click(Region region) throws InterruptedException {
+    public void click(Region region) throws InterruptedException {
         Thread.sleep(350 + random.nextInt(150));
 
         int clickX = region.x + random.nextInt(region.width);
         int clickY = region.y + random.nextInt(region.height);
 
-        robot.mouseMove(clickX, clickY);
-        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-
-        Thread.sleep(30 + random.nextInt(50));
-
-        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        device.press(clickX, clickY, 30 + random.nextInt(50));
 
         System.out.println("Clicked at: " + clickX + ", " + clickY);
     }
 
     // Повільний hold (якщо треба для меню)
-    public static void holdClick(Region region, int holdMs) throws InterruptedException {
+    public void holdClick(Region region, int holdMs) throws InterruptedException {
         Thread.sleep(350 + random.nextInt(150));
 
         int clickX = region.x + random.nextInt(region.width);
         int clickY = region.y + random.nextInt(region.height);
 
-        robot.mouseMove(clickX, clickY);
-        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-
-        Thread.sleep(holdMs);
-
-        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        device.press(clickX, clickY, holdMs);
 
         System.out.println("Hold clicked at: " + clickX + ", " + clickY + " for " + holdMs + "ms");
     }
 
     // Швидкий бойовий клік
-    public static void battleClick(Region region) throws InterruptedException {
+    public void battleClick(Region region) throws InterruptedException {
         int clickX = region.x + random.nextInt(region.width);
         int clickY = region.y + random.nextInt(region.height);
 
-        robot.mouseMove(clickX, clickY);
-        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-
-        Thread.sleep(20 + random.nextInt(40));
-
-        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        device.press(clickX, clickY, 20 + random.nextInt(40));
 
         System.out.println("Battle clicked at: " + clickX + ", " + clickY);
     }
 
     // Швидкий hold для висадки війська
-    public static void battleHoldClick(Region region, int holdMs) throws InterruptedException {
+    public void battleHoldClick(Region region, int holdMs) throws InterruptedException {
         int clickX = region.x + random.nextInt(region.width);
         int clickY = region.y + random.nextInt(region.height);
 
-        robot.mouseMove(clickX, clickY);
-        robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-
-        Thread.sleep(holdMs);
-
-        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        device.press(clickX, clickY, holdMs);
 
         System.out.println("Battle hold clicked at: " + clickX + ", " + clickY + " for " + holdMs + "ms");
     }
 
-    // Zoom out через CTRL + колесо в конкретній точці
-    public static void zoomOutMany(int x, int y, int times) throws InterruptedException {
-
-        robot.mouseMove(x, y);
-
-        Thread.sleep(200);
-
-        robot.keyPress(KeyEvent.VK_CONTROL);
-
-        for (int i = 0; i < times; i++) {
-
-            robot.mouseWheel(3);
-
-            Thread.sleep(100 + random.nextInt(100));
-        }
-
-        robot.keyRelease(KeyEvent.VK_CONTROL);
+    public void zoomOutMany(int x, int y, int times) throws InterruptedException {
+        device.zoomOut(x, y, times);
 
         System.out.println("Zoomed out at: " + x + ", " + y);
     }
-
 }

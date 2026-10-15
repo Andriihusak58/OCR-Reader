@@ -37,8 +37,10 @@ public class Builder {
     }
 
     public void run() throws Exception {
-        final Bot bot = new Bot();
-        final OcrService ocrService = new OcrService();
+        final GameContext ctx = GameContext.robot();
+        final Bot bot = new Bot(ctx);
+        final OcrService ocrService = new OcrService(ctx.screen);
+        final Actions actions = ctx.actions;
 
         while (running) {
 
@@ -58,15 +60,15 @@ public class Builder {
             sleep(300, 150);
             if (shouldStop()) break;
 
-            Actions.battleHoldClick(Regions.POINT_2, 600 + random.nextInt(200));
+            actions.battleHoldClick(Regions.POINT_2, 600 + random.nextInt(200));
             sleep(300, 150);
             if (shouldStop()) break;
 
-            Actions.battleClick(Regions.SLOT_1);
+            actions.battleClick(Regions.SLOT_1);
             sleep(300, 150);
             if (shouldStop()) break;
 
-            Actions.battleHoldClick(Regions.POINT_2, 1100 + random.nextInt(200));
+            actions.battleHoldClick(Regions.POINT_2, 1100 + random.nextInt(200));
             sleep(60000, 5000);
             if (shouldStop()) break;
 
@@ -86,11 +88,11 @@ public class Builder {
             sleep(500, 150);
             if (shouldStop()) break;
 
-            Actions.zoomOutMany(1002, 757, 1);
+            actions.zoomOutMany(1002, 757, 1);
             sleep(300, 150);
             if (shouldStop()) break;
 
-            Actions.battleClick(Regions.ELIXIR_CART);
+            actions.battleClick(Regions.ELIXIR_CART);
             sleep(300, 150);
             if (shouldStop()) break;
 
@@ -98,7 +100,7 @@ public class Builder {
             sleep(300, 150);
             if (shouldStop()) break;
 
-            Actions.battleClick(Regions.Attack_DC);
+            actions.battleClick(Regions.Attack_DC);
             sleep(2000, 350);
             if (shouldStop()) break;
 
@@ -126,4 +128,4 @@ public class Builder {
         Builder builder = new Builder();
         builder.run();
     }
-}
+}

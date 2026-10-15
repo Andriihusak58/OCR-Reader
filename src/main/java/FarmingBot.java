@@ -7,11 +7,11 @@ public class FarmingBot {
 
     private volatile boolean running = true;
 
-    public FarmingBot(BotConfig config) throws Exception {
+    public FarmingBot(BotConfig config, GameContext ctx) throws Exception {
         this.config = config;
-        this.searchBot = new SearchBot(config);
-        this.attackBot = new AttackBot();
-        this.ocrService = new OcrService();
+        this.searchBot = new SearchBot(config, ctx);
+        this.attackBot = new AttackBot(ctx);
+        this.ocrService = new OcrService(ctx.screen);
     }
 
     public void stop() {
@@ -68,4 +68,4 @@ public class FarmingBot {
 
         System.out.println("FarmingBot stopped");
     }
-}
+}

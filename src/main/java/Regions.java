@@ -31,6 +31,8 @@ public class Regions {
     public static final Region POINT_4 = new Region(460, 788, 110, 50);
     public static final Region POINT_5 = new Region(1395, 206, 110, 50);
     public static final Region POINT_6 = new Region(425, 212, 110, 50);
+    public static final Region POINT_7 = new Region(949, 532, 50, 50);
+
 
     public static final Region POINT_JUMP_1 = new Region(720, 231, 100, 100);
     public static final Region POINT_JUMP_2 = new Region(1200, 228, 100, 100);

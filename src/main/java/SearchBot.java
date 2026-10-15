@@ -3,16 +3,18 @@ import java.util.Random;
 public class SearchBot {
 
     private final Bot bot;
+    private final Actions actions;
     private final OcrService ocrService;
     private final BotConfig config;
     private final Random random = new Random();
 
     private volatile boolean running = true;
 
-    public SearchBot(BotConfig config) throws Exception {
+    public SearchBot(BotConfig config, GameContext ctx) {
         this.config = config;
-        this.bot = new Bot();
-        this.ocrService = new OcrService();
+        this.bot = new Bot(ctx);
+        this.actions = ctx.actions;
+        this.ocrService = new OcrService(ctx.screen);
     }
 
     public void stop() {
@@ -53,23 +55,23 @@ public class SearchBot {
             sleep(150, 150);
             if (shouldStop()) return;
 
-            Actions.battleClick(Regions.CASE);
+            actions.battleClick(Regions.CASE);
             sleep(150, 150);
             if (shouldStop()) return;
 
-            Actions.battleClick(Regions.CASE);
+            actions.battleClick(Regions.CASE);
             sleep(150, 150);
             if (shouldStop()) return;
 
-            Actions.battleClick(Regions.CASE);
+            actions.battleClick(Regions.CASE);
             sleep(150, 150);
             if (shouldStop()) return;
 
-            Actions.battleClick(Regions.CASE);
+            actions.battleClick(Regions.CASE);
             sleep(4150, 150);
             if (shouldStop()) return;
 
-            Actions.battleClick(Regions.CONTINUE);
+            actions.battleClick(Regions.CONTINUE);
             sleep(200, 150);
             if (shouldStop()) return;
         }
@@ -80,7 +82,7 @@ public class SearchBot {
     }
 
     private void collectAndZoomOut() throws Exception {
-        Actions.zoomOutMany(1002, 757, 1);
+        actions.zoomOutMany(1002, 757, 1);
         sleep(150, 150);
     }
 
@@ -150,4 +152,4 @@ public class SearchBot {
 
         return false; // running став false -> зупинка за запитом
     }
-}
+}

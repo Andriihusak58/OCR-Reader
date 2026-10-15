@@ -2,12 +2,12 @@ import java.awt.image.BufferedImage;
 
 public class BattleBarScanner {
 
-    private final ScreenReader reader;
+    private final ScreenSource reader;
     private final ImageLoader loader;
     private final TemplateMatcher matcher;
 
-    public BattleBarScanner() throws Exception {
-        this.reader = new ScreenReader();
+    public BattleBarScanner(ScreenSource screen) {
+        this.reader = screen;
         this.loader = new ImageLoader();
         this.matcher = new TemplateMatcher();
     }
@@ -51,4 +51,4 @@ public class BattleBarScanner {
 
         return layout;
     }
-}
+}

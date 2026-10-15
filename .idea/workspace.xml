@@ -7,7 +7,7 @@
     <list default="true" id="3710a1f7-8ff6-4314-a643-a750cbf7b6e2" name="Changes" comment="Initial commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/AttackBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/AttackBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/SearchBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SearchBot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Regions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Regions.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/UiElements.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UiElements.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -186,7 +186,15 @@
       <option name="project" value="LOCAL" />
       <updated>1783693975322</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1784482024652</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1784482024652</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -18,7 +18,7 @@ public class Main {
     }
 
     public void run() throws Exception {
-        farmingBot = new FarmingBot(config);
+        farmingBot = new FarmingBot(config, GameContext.robot());
         farmingBot.run();
     }
 
@@ -30,4 +30,4 @@ public class Main {
             e.printStackTrace();
         }
     }
-}
+}
