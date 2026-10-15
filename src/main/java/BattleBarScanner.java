@@ -2,6 +2,9 @@ import java.awt.image.BufferedImage;
 
 public class BattleBarScanner {
 
+    // Іконки на панелі мають змінні цифри кількості, тому поріг трохи нижчий за DEFAULT_THRESHOLD
+    private static final double SLOT_THRESHOLD = 0.80;
+
     private final ScreenSource reader;
     private final ImageLoader loader;
     private final TemplateMatcher matcher;
@@ -33,22 +36,22 @@ public class BattleBarScanner {
     public BattleLayout scanAll() {
         BattleLayout layout = new BattleLayout();
 
-        layout.king = findSlot("images/KING.png", 0.70);
-        layout.queen = findSlot("images/QUEEN.png", 0.70);
-        layout.warden = findSlot("images/WARDEN.png", 0.70);
-        layout.champion = findSlot("images/CHAMPION.png", 0.70);
-        layout.DRAGONDUKE = findSlot("images/DRAGONDUKE.png", 0.70);
-        layout.MINIONPRINCE = findSlot("images/MINIONPRINCE.png", 0.70);
+        layout.king = findSlot("images/KING.png", SLOT_THRESHOLD);
+        layout.queen = findSlot("images/QUEEN.png", SLOT_THRESHOLD);
+        layout.warden = findSlot("images/WARDEN.png", SLOT_THRESHOLD);
+        layout.champion = findSlot("images/CHAMPION.png", SLOT_THRESHOLD);
+        layout.DRAGONDUKE = findSlot("images/DRAGONDUKE.png", SLOT_THRESHOLD);
+        layout.MINIONPRINCE = findSlot("images/MINIONPRINCE.png", SLOT_THRESHOLD);
 
-        layout.valkyrie = findSlot("images/VALKYRIE.png", 0.70);
-        layout.jumpSpell = findSlot("images/JUMP_SPELL.png", 0.70);
-        layout.dragon = findSlot("images/DRAGON.png", 0.70);
-        layout.wizard = findSlot("images/WIZARD.png", 0.70);
-        layout.barbarian = findSlot("images/BARBARIAN.png", 0.70);
-        layout.SNEAKY_GOBLIN = findSlot("images/SNEAKY_GOBLIN.png", 0.70);
+        layout.valkyrie = findSlot("images/VALKYRIE.png", SLOT_THRESHOLD);
+        layout.jumpSpell = findSlot("images/JUMP_SPELL.png", SLOT_THRESHOLD);
+        layout.dragon = findSlot("images/DRAGON.png", SLOT_THRESHOLD);
+        layout.wizard = findSlot("images/WIZARD.png", SLOT_THRESHOLD);
+        layout.barbarian = findSlot("images/BARBARIAN.png", SLOT_THRESHOLD);
+        layout.SNEAKY_GOBLIN = findSlot("images/SNEAKY_GOBLIN.png", SLOT_THRESHOLD);
 
 
 
         return layout;
     }
-}
+}

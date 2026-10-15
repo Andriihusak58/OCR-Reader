@@ -1,4 +1,9 @@
 public class UiElements {
+
+    // Поріг схожості для OpenCV (TM_CCOEFF_NORMED): правильний збіг ~0.95+, схожа інша кнопка ~0.4.
+    // Стартове значення; точніше підбирається для кожного елемента через tools/MatchTest.
+    private static final double DEFAULT_THRESHOLD = 0.85;
+
     public static final UiElement FIND_MATCH;
     public static final UiElement ATTACK;
     public static final UiElement NEXT;
@@ -34,40 +39,40 @@ public class UiElements {
     }
 
     static {
-        FIND_MATCH = new UiElement(Regions.FIND_MATCH, "images/FIND_MATCH.png", 0.4);
-        ATTACK = new UiElement(Regions.ATTACK, "images/ATTACK.png", 0.2);
-        NEXT = new UiElement(Regions.NEXT, "images/NEXT.png", 0.1);
-        ATTACK_GO = new UiElement(Regions.ATTACK_GO, "images/ATTACK_GO.png", 0.2);
-        END_BATTLE = new UiElement(Regions.END_BATTLE,"images/END_BATTLE.png",0.7);
-        SURRENDER_OKAY = new UiElement(Regions.SURRENDER_OKAY,"images/SURRENDER_OKAY.png",0.7);
-        RETURN_HOME = new UiElement(Regions.RETURN_HOME,"images/RETURN_HOME.png",0.5);
-        OKAY_STAR_BONUS = new UiElement(Regions.OKAY_STAR_BONUS,"images/OKAY_STAR_BONUS.png",0.7);
-        OKAY_STAR_BONUS_DC = new UiElement(Regions.OKAY_STAR_BONUS_DC,"images/OKAY_STAR_BONUS_DC.png",0.7);
-        CONTINUE = new UiElement(Regions.CONTINUE,"images/CONTINUE.png",0.7);
+        FIND_MATCH = new UiElement(Regions.FIND_MATCH, "images/FIND_MATCH.png", DEFAULT_THRESHOLD);
+        ATTACK = new UiElement(Regions.ATTACK, "images/ATTACK.png", DEFAULT_THRESHOLD);
+        NEXT = new UiElement(Regions.NEXT, "images/NEXT.png", DEFAULT_THRESHOLD);
+        ATTACK_GO = new UiElement(Regions.ATTACK_GO, "images/ATTACK_GO.png", DEFAULT_THRESHOLD);
+        END_BATTLE = new UiElement(Regions.END_BATTLE,"images/END_BATTLE.png", DEFAULT_THRESHOLD);
+        SURRENDER_OKAY = new UiElement(Regions.SURRENDER_OKAY,"images/SURRENDER_OKAY.png", DEFAULT_THRESHOLD);
+        RETURN_HOME = new UiElement(Regions.RETURN_HOME,"images/RETURN_HOME.png", DEFAULT_THRESHOLD);
+        OKAY_STAR_BONUS = new UiElement(Regions.OKAY_STAR_BONUS,"images/OKAY_STAR_BONUS.png", DEFAULT_THRESHOLD);
+        OKAY_STAR_BONUS_DC = new UiElement(Regions.OKAY_STAR_BONUS_DC,"images/OKAY_STAR_BONUS_DC.png", DEFAULT_THRESHOLD);
+        CONTINUE = new UiElement(Regions.CONTINUE,"images/CONTINUE.png", DEFAULT_THRESHOLD);
 
-        KING = new UiElement(Regions.KING,"images/KING.png",0.7);
-        QUEEN = new UiElement(Regions.QUEEN,"images/QUEEN.png",0.7);
-        WARDEN = new UiElement(Regions.WARDEN,"images/WARDEN.png",0.7);
-        CHAMPION = new UiElement(Regions.CHAMPION,"images/CHAMPION.png",0.7);
-        DRAGONDUKE = new UiElement(Regions.DRAGONDUKE,"images/DRAGONDUKE.png",0.7);
-        MINIONPRINCE = new UiElement(Regions.MINIONPRINCE,"images/MINIONPRINCE.png",0.7);
+        KING = new UiElement(Regions.KING,"images/KING.png", DEFAULT_THRESHOLD);
+        QUEEN = new UiElement(Regions.QUEEN,"images/QUEEN.png", DEFAULT_THRESHOLD);
+        WARDEN = new UiElement(Regions.WARDEN,"images/WARDEN.png", DEFAULT_THRESHOLD);
+        CHAMPION = new UiElement(Regions.CHAMPION,"images/CHAMPION.png", DEFAULT_THRESHOLD);
+        DRAGONDUKE = new UiElement(Regions.DRAGONDUKE,"images/DRAGONDUKE.png", DEFAULT_THRESHOLD);
+        MINIONPRINCE = new UiElement(Regions.MINIONPRINCE,"images/MINIONPRINCE.png", DEFAULT_THRESHOLD);
 
-        VALKYRIE = new UiElement(Regions.VALKYRIE,"images/VALKYRIE.png",0.15);
-        JUMP_SPELL = new UiElement(Regions.JUMP_SPELL,"images/JUMP_SPELL.png",0.7);
-        DRAGON = new UiElement(Regions.DRAGON,"images/DRAGON.png",0.7);
-        WIZARD = new UiElement(Regions.WIZARD,"images/WIZARD.png",0.7);
-        BARBARIAN = new UiElement(Regions.BARBARIAN,"images/BARBARIAN.png",0.7);
-        SNEAKY_GOBLIN = new UiElement(Regions.SNEAKY_GOBLIN,"images/SNEAKY_GOBLIN.png",0.7);
+        VALKYRIE = new UiElement(Regions.VALKYRIE,"images/VALKYRIE.png", DEFAULT_THRESHOLD);
+        JUMP_SPELL = new UiElement(Regions.JUMP_SPELL,"images/JUMP_SPELL.png", DEFAULT_THRESHOLD);
+        DRAGON = new UiElement(Regions.DRAGON,"images/DRAGON.png", DEFAULT_THRESHOLD);
+        WIZARD = new UiElement(Regions.WIZARD,"images/WIZARD.png", DEFAULT_THRESHOLD);
+        BARBARIAN = new UiElement(Regions.BARBARIAN,"images/BARBARIAN.png", DEFAULT_THRESHOLD);
+        SNEAKY_GOBLIN = new UiElement(Regions.SNEAKY_GOBLIN,"images/SNEAKY_GOBLIN.png", DEFAULT_THRESHOLD);
 
 
-        Attack_DC = new UiElement(Regions.Attack_DC,"images/Attack_DC.png",0.2);
-        Find_Now = new UiElement(Regions.Find_Now,"images/Find_Now.png",0.7);
-        SURRENDER_DC = new UiElement(Regions.SURRENDER_DC,"images/SURRENDER_DC.png",0.7);
-        Battle_Machine = new UiElement(Regions.Battle_Machine,"images/Battle_Machine.png",0.7);
-        Battle_COPTER = new UiElement(Regions.Battle_COPTER,"images/Battle_COPTER.png",0.7);
-        RETURN_HOME_DC = new UiElement(Regions.RETURN_HOME_DC,"images/RETURN_HOME_DC.png",0.7);
-        COLLECT = new UiElement(Regions.COLLECT,"images/COLLECT.png",0.7);
-        CASE = new UiElement(Regions.CASE,"images/CASE.png",0.7);
+        Attack_DC = new UiElement(Regions.Attack_DC,"images/Attack_DC.png", DEFAULT_THRESHOLD);
+        Find_Now = new UiElement(Regions.Find_Now,"images/Find_Now.png", DEFAULT_THRESHOLD);
+        SURRENDER_DC = new UiElement(Regions.SURRENDER_DC,"images/SURRENDER_DC.png", DEFAULT_THRESHOLD);
+        Battle_Machine = new UiElement(Regions.Battle_Machine,"images/Battle_Machine.png", DEFAULT_THRESHOLD);
+        Battle_COPTER = new UiElement(Regions.Battle_COPTER,"images/Battle_COPTER.png", DEFAULT_THRESHOLD);
+        RETURN_HOME_DC = new UiElement(Regions.RETURN_HOME_DC,"images/RETURN_HOME_DC.png", DEFAULT_THRESHOLD);
+        COLLECT = new UiElement(Regions.COLLECT,"images/COLLECT.png", DEFAULT_THRESHOLD);
+        CASE = new UiElement(Regions.CASE,"images/CASE.png", DEFAULT_THRESHOLD);
 
     }
 }
