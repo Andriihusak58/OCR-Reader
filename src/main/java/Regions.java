@@ -9,7 +9,7 @@ public class Regions {
     public static final Region SURRENDER_OKAY = new Region(1000, 614, 330, 140);
     public static final Region RETURN_HOME = new Region(837, 877, 250, 100);
     public static final Region OKAY_STAR_BONUS = new Region(835, 865, 250, 105);
-    public static final Region OKAY_STAR_BONUS_DC = new Region(825, 787, 250, 105);
+    public static final Region OKAY_STAR_BONUS_DC = new Region(790, 770, 340, 150);
     public static final Region ELIXIR_CART = new Region(1270, 2,20,30);
     public static final Region COLLECT = new Region(1300,880,200,75);
     public static final Region CASE = new Region(757,738,310,110);
