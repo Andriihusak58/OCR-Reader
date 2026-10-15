@@ -45,7 +45,7 @@ public class BotGui {
 
         JFrame frame = new JFrame("Bot Control");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 350);
+        frame.setSize(400, 420);
         frame.setLayout(new GridLayout(0, 2, 8, 8));
 
         JTextField mainGoldField = new JTextField("9000000");
@@ -55,10 +55,19 @@ public class BotGui {
         JTextField builderGoldField = new JTextField("3000000");
         JTextField builderElixirField = new JTextField("3000000");
 
+        JComboBox<String> modeBox = new JComboBox<>(new String[]{"Robot (PC screen)", "ADB (LDPlayer)"});
+        JTextField serialField = new JTextField("emulator-5554");
+
         JButton startMain = new JButton("Start Main Bot");
         JButton stopMain = new JButton("Stop Main Bot = S");
         JButton startBuilder = new JButton("Start Builder Bot");
         JButton stopBuilder = new JButton("Stop Builder Bot = S");
+
+        frame.add(new JLabel("Input mode:"));
+        frame.add(modeBox);
+
+        frame.add(new JLabel("ADB serial:"));
+        frame.add(serialField);
 
         frame.add(new JLabel("Main target gold:"));
         frame.add(mainGoldField);
@@ -90,7 +99,7 @@ public class BotGui {
                     builderElixirField
             );
 
-            mainBot = new Main(config);
+            mainBot = new Main(config, contextFactory(modeBox, serialField));
 
             new Thread(() -> {
                 try {
@@ -117,7 +126,7 @@ public class BotGui {
                     builderElixirField
             );
 
-            builderBot = new Builder(config);
+            builderBot = new Builder(config, contextFactory(modeBox, serialField));
 
             new Thread(() -> {
                 try {
@@ -138,6 +147,12 @@ public class BotGui {
         frame.setLocationRelativeTo(null);
         frame.setAlwaysOnTop(true);
         frame.setVisible(true);
+    }
+
+    private ContextFactory contextFactory(JComboBox<String> modeBox, JTextField serialField) {
+        final boolean adb = modeBox.getSelectedIndex() == 1;
+        final String serial = serialField.getText().trim();
+        return adb ? () -> GameContext.adb(serial) : GameContext::robot;
     }
 
     private BotConfig readConfig(

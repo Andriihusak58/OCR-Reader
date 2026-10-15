@@ -4,14 +4,16 @@ public class Builder {
 
     private volatile boolean running = true;
     private final BotConfig config;
+    private final ContextFactory contextFactory;
     private final Random random = new Random();
 
     public Builder() {
-        this.config = new BotConfig();
+        this(new BotConfig(), GameContext::robot);
     }
 
-    public Builder(BotConfig config) {
+    public Builder(BotConfig config, ContextFactory contextFactory) {
         this.config = config;
+        this.contextFactory = contextFactory;
     }
 
     public void stop() {
@@ -37,7 +39,7 @@ public class Builder {
     }
 
     public void run() throws Exception {
-        final GameContext ctx = GameContext.robot();
+        final GameContext ctx = contextFactory.create();
         final Bot bot = new Bot(ctx);
         final OcrService ocrService = new OcrService(ctx.screen);
         final Actions actions = ctx.actions;
@@ -128,4 +130,4 @@ public class Builder {
         Builder builder = new Builder();
         builder.run();
     }
-}
+}

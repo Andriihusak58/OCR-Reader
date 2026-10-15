@@ -1,14 +1,16 @@
 public class Main {
 
     private final BotConfig config;
+    private final ContextFactory contextFactory;
     private FarmingBot farmingBot;
 
     public Main() {
-        this.config = new BotConfig();
+        this(new BotConfig(), GameContext::robot);
     }
 
-    public Main(BotConfig config) {
+    public Main(BotConfig config, ContextFactory contextFactory) {
         this.config = config;
+        this.contextFactory = contextFactory;
     }
 
     public void stop() {
@@ -18,7 +20,7 @@ public class Main {
     }
 
     public void run() throws Exception {
-        farmingBot = new FarmingBot(config, GameContext.robot());
+        farmingBot = new FarmingBot(config, contextFactory.create());
         farmingBot.run();
     }
 
@@ -30,4 +32,4 @@ public class Main {
             e.printStackTrace();
         }
     }
-}
+}
