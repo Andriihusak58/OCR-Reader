@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3710a1f7-8ff6-4314-a643-a750cbf7b6e2" name="Changes" comment="Initial commit">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BotConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BotConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Regions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Regions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/UiElements.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/UiElements.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tools/ButtonReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tools/ButtonReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/tools/ZoomTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/tools/ZoomTest.java" afterDir="false" />
-    </list>
+    <list default="true" id="3710a1f7-8ff6-4314-a643-a750cbf7b6e2" name="Changes" comment="Initial commit" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -77,7 +70,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Application.BotGui">
+  <component name="RunManager" selected="Application.koordinaten">
     <configuration name="BotGui" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="BotGui" />
       <module name="BotOCR" />
@@ -115,8 +108,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.BotGui" />
         <item itemvalue="Application.koordinaten" />
+        <item itemvalue="Application.BotGui" />
         <item itemvalue="Application.ZoomTest" />
         <item itemvalue="Application.ButtonReader" />
         <item itemvalue="Application.Builder" />
@@ -213,7 +206,15 @@
       <option name="project" value="LOCAL" />
       <updated>1792073245100</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1792085336191</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1792085336191</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
