@@ -4,7 +4,7 @@
  */
 public class ZoomTest {
 
-    private static final String ADB_PATH = "adb"; // або повний шлях до adb.exe
+    private static final String ADB_PATH = "C:\\\\LDPlayer\\\\LDPlayer14\\\\adb.exe"; // або повний шлях до adb.exe
     private static final String SERIAL = "emulator-5554";
 
     public static void main(String[] args) throws Exception {

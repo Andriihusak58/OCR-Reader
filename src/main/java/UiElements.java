@@ -2,7 +2,7 @@ public class UiElements {
 
     // Поріг схожості для OpenCV (TM_CCOEFF_NORMED): правильний збіг ~0.95+, схожа інша кнопка ~0.4.
     // Стартове значення; точніше підбирається для кожного елемента через tools/MatchTest.
-    private static final double DEFAULT_THRESHOLD = 0.85;
+    private static final double DEFAULT_THRESHOLD = 0.3;
 
     public static final UiElement FIND_MATCH;
     public static final UiElement ATTACK;
