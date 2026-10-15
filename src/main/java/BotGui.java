@@ -39,6 +39,8 @@ public class BotGui {
     private volatile Main mainBot;
     private volatile Builder builderBot;
     private volatile boolean running;
+    private volatile boolean stopRequested;
+    private volatile Thread botThread;
 
     private JFrame frame;
 
@@ -305,6 +307,7 @@ public class BotGui {
         final String name = main ? "Main bot" : "Builder bot";
 
         running = true;
+        stopRequested = false;
         updateControls();
         setStatus("Running: " + name, GREEN);
         System.out.println("Starting " + name + " (" + modeBox.getSelectedItem() + ")");
@@ -321,12 +324,18 @@ public class BotGui {
                     builderBot = bot;
                     bot.run();
                 }
+            } catch (InterruptedException ex) {
+                // зупинка користувачем: нормальне завершення
             } catch (Exception ex) {
-                failed = true;
-                ex.printStackTrace();
+                // після запиту зупинки "виняток" майже завжди наслідок переривання (наприклад, ADB)
+                if (!stopRequested) {
+                    failed = true;
+                    ex.printStackTrace();
+                }
             } finally {
                 mainBot = null;
                 builderBot = null;
+                botThread = null;
             }
 
             final boolean error = failed;
@@ -342,6 +351,7 @@ public class BotGui {
             });
         }, "bot-thread");
         thread.setDaemon(true);
+        botThread = thread;
         thread.start();
     }
 
@@ -350,6 +360,8 @@ public class BotGui {
             return;
         }
 
+        stopRequested = true;
+
         Main m = mainBot;
         Builder b = builderBot;
         if (m != null) {
@@ -357,6 +369,12 @@ public class BotGui {
         }
         if (b != null) {
             b.stop();
+        }
+
+        // перериваємо потік бота, щоб зупинка не чекала кінця довгої паузи, скріншота чи жесту
+        Thread t = botThread;
+        if (t != null) {
+            t.interrupt();
         }
 
         System.out.println("Stop requested (" + STOP_KEY_NAME + ")");
