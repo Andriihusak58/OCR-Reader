@@ -18,4 +18,10 @@ public class GameContext {
     public static GameContext robot() throws AWTException {
         return new GameContext(new ScreenReader(), new RobotInputDevice());
     }
+
+    /** Гра в Android-емуляторі (LDPlayer): скріншоти й ввід через adb, монітор ПК не потрібен. */
+    public static GameContext adb(String serial) {
+        Adb adb = new Adb(serial);
+        return new GameContext(new AdbScreenSource(adb), new AdbInputDevice(adb));
+    }
 }
