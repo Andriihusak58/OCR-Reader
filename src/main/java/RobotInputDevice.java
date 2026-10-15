@@ -19,9 +19,12 @@ public class RobotInputDevice implements InputDevice {
         robot.mouseMove(x, y);
         robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
 
-        Thread.sleep(holdMs);
-
-        robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        try {
+            Thread.sleep(holdMs);
+        } finally {
+            // навіть при зупинці (переривання) кнопка не лишається затиснутою
+            robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+        }
     }
 
     // Zoom out через CTRL + колесо миші в конкретній точці
@@ -33,11 +36,13 @@ public class RobotInputDevice implements InputDevice {
 
         robot.keyPress(KeyEvent.VK_CONTROL);
 
-        for (int i = 0; i < times; i++) {
-            robot.mouseWheel(3);
-            Thread.sleep(100 + random.nextInt(100));
+        try {
+            for (int i = 0; i < times; i++) {
+                robot.mouseWheel(3);
+                Thread.sleep(100 + random.nextInt(100));
+            }
+        } finally {
+            robot.keyRelease(KeyEvent.VK_CONTROL);
         }
-
-        robot.keyRelease(KeyEvent.VK_CONTROL);
     }
 }
