@@ -40,3 +40,6 @@ build/
 
 ### Bot debug output ###
 ocr_fails/
+
+### Maven build output ###
+dependency-reduced-pom.xml

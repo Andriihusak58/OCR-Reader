@@ -406,7 +406,7 @@ public class BotGui {
 
     private void testConnection() {
         final String adbPath = adbPathField.getText().trim().isEmpty() ? "adb" : adbPathField.getText().trim();
-        final String serial = serialField.getText().trim();
+        final String typedSerial = serialField.getText().trim();
 
         testButton.setEnabled(false);
         showConnection("Checking...", GRAY, null);
@@ -416,6 +416,14 @@ public class BotGui {
             Color color;
             String tooltip = null;
             try {
+                // if the typed serial is not connected but adb sees another device, use that one
+                String serial = typedSerial;
+                java.util.List<String> devices = AdbLocator.listDevices(adbPath);
+                if (!devices.isEmpty() && !devices.contains(serial)) {
+                    serial = devices.get(0);
+                    final String picked = serial;
+                    SwingUtilities.invokeLater(() -> serialField.setText(picked));
+                }
                 Region bounds = new AdbScreenSource(new Adb(adbPath, serial)).bounds();
                 boolean ok = bounds.width == 1920 && bounds.height == 1080;
                 text = (ok ? "Connected: " : "Connected, but 1920x1080 is expected: ")
@@ -505,7 +513,12 @@ public class BotGui {
         BotConfig d = new BotConfig();
 
         modeBox.setSelectedItem(prefs.get("mode", MODE_ROBOT));
-        adbPathField.setText(prefs.get("adbPath", "adb"));
+        String savedAdb = prefs.get("adbPath", "");
+        if (savedAdb.isEmpty() || savedAdb.equals("adb")) {
+            String found = AdbLocator.findAdb();
+            savedAdb = found != null ? found : "adb";
+        }
+        adbPathField.setText(savedAdb);
         serialField.setText(prefs.get("serial", "emulator-5554"));
 
         mainGoldField.setText(prefs.get("mainGold", String.valueOf(d.mainTargetGold)));

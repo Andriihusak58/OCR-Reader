@@ -54,12 +54,29 @@ This is a personal/educational automation project. Using bots in Clash of Clans 
    java -jar target/BotOCR-1.0-SNAPSHOT.jar
    ```
 
+## Running a prebuilt copy (sharing with a friend)
+
+The bot reads `images/` (templates) and `tessdata/` (OCR data) from the **working directory**, so they must sit next to the jar.
+
+1. Build: `mvn clean package`
+2. Create a folder with:
+   ```
+   BotOCR/
+     BotOCR-1.0-SNAPSHOT.jar   (from target/)
+     images/
+     tessdata/
+     start.bat
+   ```
+3. Zip it. The other person needs **Java 21** installed and then just double-clicks `start.bat` (it switches to its own folder before starting the jar)
+4. In LDPlayer: *Settings -> Other settings -> ADB debugging -> Open local connection*, game language English, resolution 1920x1080
+5. In the GUI choose **ADB (LDPlayer)**. The bot tries to find `adb.exe` (LDPlayer / Android SDK folders) and the device serial by itself; if not, use **Browse** and **Test connection**
+
 ## Usage
 
 1. Launch the bot GUI
 2. Choose the input mode:
    - **Robot (PC screen)** — Clash of Clans is visible on your main screen
-   - **ADB (LDPlayer)** — set the path to `adb.exe` (bundled with LDPlayer) and the device serial (default `emulator-5554`), then click **Test connection**. The emulator must run at 1920x1080
+   - **ADB (LDPlayer)** — the `adb.exe` path (bundled with LDPlayer) and device serial (default `emulator-5554`) are detected automatically when possible; otherwise set them manually, then click **Test connection**. The emulator must run at 1920x1080
 3. Set target gold/elixir amounts (the bot stops once reached)
 4. Click **Start Main Bot** or **Start Builder Bot**
 5. Press **F9** at any time to stop the running bot immediately
