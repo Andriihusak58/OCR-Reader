@@ -9,11 +9,12 @@ This is a personal/educational automation project. Using bots in Clash of Clans 
 ## Features
 
 - **Farming loop** — searches for bases with enough loot, attacks, and collects resources
-- **Template matching** — locates UI buttons and troops on screen using image comparison
+- **Template matching** — finds UI buttons and troops anywhere on screen with OpenCV and clicks where it found them (no hard-coded click positions)
 - **OCR** — reads gold/elixir amounts from the screen via Tesseract (Tess4j)
 - **Two modes** — Main (farming) bot and Builder Base bot, controlled independently
-- **GUI control panel** — start/stop each bot and configure target resource amounts
-- **Global hotkey** — press `S` anywhere (even with the game window focused) to stop both bots instantly
+- **Two input modes** — `Robot` (game on your PC screen) or `ADB` (game in an Android emulator such as LDPlayer, so you can keep using the PC in parallel)
+- **GUI control panel** — dark Swing UI with live log, status indicator, ADB connection check, and settings that are remembered between runs
+- **Global hotkey** — press `F9` anywhere (even with the game window focused) to stop the running bot instantly
 - **Dev tools** (`tools/` folder) — helper scripts used to find screen coordinates and capture new UI templates
 
 ## Tech stack
@@ -22,20 +23,22 @@ This is a personal/educational automation project. Using bots in Clash of Clans 
 - Maven
 - [Tess4j](http://tess4j.sourceforge.net/) (Tesseract OCR wrapper)
 - [JNativeHook](https://github.com/kwhat/jnativehook) (global keyboard hook)
-- Java Swing (GUI)
-- `java.awt.Robot` (screen capture, mouse/keyboard control)
+- [OpenCV](https://opencv.org/) via `org.openpnp:opencv` (template matching)
+- Java Swing + [FlatLaf](https://www.formdev.com/flatlaf/) (GUI)
+- `java.awt.Robot` or ADB (`adb exec-out screencap`, `adb shell input`) for screen capture and input
 
 ## Architecture
 
 - `Regions` / `UiElements` — screen coordinates and template definitions
-- `ScreenReader` / `ImageLoader` / `TemplateMatcher` — screenshot capture and image matching
+- `ScreenSource` / `InputDevice` — abstractions over where screenshots come from and how input is sent, with `Robot` (`ScreenReader`, `RobotInputDevice`) and `ADB` (`AdbScreenSource`, `AdbInputDevice`) implementations; `GameContext` wires them together
+- `ImageLoader` / `TemplateMatcher` — template loading and OpenCV image matching
 - `Bot` — checks if a UI element is present and clicks it
 - `OcrService` / `TextReader` / `ImagePreprocessor` — reads numbers (gold/elixir) from the screen
 - `SearchBot` — clears popups, zooms out, and searches for a good base to attack
 - `AttackBot` — deploys troops and heroes during battle
 - `Builder` — separate loop for the Builder Base
 - `FarmingBot` / `Main` — ties `SearchBot` and `AttackBot` together into the main farming loop
-- `BotGui` — Swing control panel (start/stop, config, global hotkey)
+- `BotGui` — Swing control panel (mode, targets, start/stop, log, global hotkey)
 - `tools/` — standalone helper scripts (find coordinates, capture template screenshots)
 
 ## Setup
@@ -53,13 +56,16 @@ This is a personal/educational automation project. Using bots in Clash of Clans 
 
 ## Usage
 
-1. Open Clash of Clans in a window
-2. Launch the bot GUI
+1. Launch the bot GUI
+2. Choose the input mode:
+   - **Robot (PC screen)** — Clash of Clans is visible on your main screen
+   - **ADB (LDPlayer)** — set the path to `adb.exe` (bundled with LDPlayer) and the device serial (default `emulator-5554`), then click **Test connection**. The emulator must run at 1920x1080
 3. Set target gold/elixir amounts (the bot stops once reached)
 4. Click **Start Main Bot** or **Start Builder Bot**
-5. Press **S** at any time to stop both bots immediately
+5. Press **F9** at any time to stop the running bot immediately
 
 ## Known limitations
 
-- Screen regions are calibrated for a specific screen resolution/window size — coordinates will need to be re-calibrated if your setup differs
+- Templates and screen regions are calibrated for a 1920x1080 frame; other resolutions need new templates (see `tools/`)
+- Troop deployment points are fixed coordinates and may need adjusting after game UI updates
 - OCR is not 100% accurate on the in-game font; occasional misreads are possible

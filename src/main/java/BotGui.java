@@ -1,38 +1,539 @@
-import javax.swing.*;
-import java.awt.*;
+import com.formdev.flatlaf.FlatDarkLaf;
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+
+/** Панель керування ботами: режим вводу, цілі, запуск/зупинка, лог і статус. */
 public class BotGui {
 
-    private Main mainBot;
-    private Builder builderBot;
+    private static final int STOP_KEY = NativeKeyEvent.VC_F9;
+    private static final String STOP_KEY_NAME = "F9";
+
+    private static final String MODE_ROBOT = "Robot (PC screen)";
+    private static final String MODE_ADB = "ADB (LDPlayer)";
+
+    private static final int MAX_LOG_LINES = 2000;
+
+    private static final Color GREEN = new Color(0x4CAF50);
+    private static final Color AMBER = new Color(0xFFB300);
+    private static final Color RED = new Color(0xE53935);
+    private static final Color GRAY = new Color(0x9E9E9E);
+
+    private final Preferences prefs = Preferences.userNodeForPackage(BotGui.class);
+
+    private volatile Main mainBot;
+    private volatile Builder builderBot;
+    private volatile boolean running;
+
+    private JFrame frame;
+
+    private JComboBox<String> modeBox;
+    private JTextField adbPathField;
+    private JTextField serialField;
+    private JButton browseButton;
+    private JButton testButton;
+    private JLabel connLabel;
+
+    private JTextField mainGoldField;
+    private JTextField mainElixirField;
+    private JTextField enemyLootField;
+    private JTextField builderGoldField;
+    private JTextField builderElixirField;
+
+    private JButton startMain;
+    private JButton startBuilder;
+    private JButton stopButton;
+
+    private JLabel statusLabel;
+    private JCheckBox alwaysOnTop;
+    private JTextArea logArea;
 
     public static void main(String[] args) {
+        setupLookAndFeel();
         SwingUtilities.invokeLater(() -> new BotGui().create());
     }
 
+    private static void setupLookAndFeel() {
+        try {
+            UIManager.put("Button.arc", 10);
+            UIManager.put("Component.arc", 10);
+            UIManager.put("TextComponent.arc", 10);
+            FlatDarkLaf.setup();
+        } catch (Throwable t) {
+            // FlatLaf недоступний (наприклад, Maven не перезавантажено) -> стандартний вигляд Swing
+        }
+    }
+
+    // ------------------------------------------------------------------ build
+
     private void create() {
+        frame = new JFrame("BotOCR - Clash of Clans bot");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        buildComponents();
+
+        JPanel root = new JPanel(new BorderLayout(0, 10));
+        root.setBorder(new EmptyBorder(12, 12, 12, 12));
+
+        JPanel top = new JPanel(new BorderLayout(0, 10));
+        top.add(buildConnectionPanel(), BorderLayout.NORTH);
+        top.add(buildBotsPanel(), BorderLayout.CENTER);
+
+        root.add(top, BorderLayout.NORTH);
+        root.add(buildLogPanel(), BorderLayout.CENTER);
+        root.add(buildStatusBar(), BorderLayout.SOUTH);
+
+        frame.setContentPane(root);
+
+        installLogCapture();
+        loadSettings();
+        updateControls();
+        setStatus("Idle", GRAY);
+        registerHotkey();
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                saveSettings();
+                stopAll();
+                try {
+                    GlobalScreen.unregisterNativeHook();
+                } catch (Exception ignored) {
+                }
+            }
+        });
+
+        frame.setSize(880, 700);
+        frame.setMinimumSize(new Dimension(780, 600));
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        System.out.println("Ready. Press " + STOP_KEY_NAME + " at any time to stop the bot.");
+    }
+
+    private void buildComponents() {
+        modeBox = new JComboBox<>(new String[]{MODE_ROBOT, MODE_ADB});
+        modeBox.addActionListener(e -> updateControls());
+
+        adbPathField = new JTextField(24);
+        adbPathField.putClientProperty("JTextField.placeholderText", "adb  or  C:\\LDPlayer\\LDPlayer14\\adb.exe");
+        serialField = new JTextField(14);
+
+        browseButton = new JButton("Browse...");
+        browseButton.addActionListener(e -> browseAdb());
+        testButton = new JButton("Test connection");
+        testButton.addActionListener(e -> testConnection());
+        connLabel = new JLabel(" ");
+
+        mainGoldField = new JTextField(10);
+        mainElixirField = new JTextField(10);
+        enemyLootField = new JTextField(10);
+        builderGoldField = new JTextField(10);
+        builderElixirField = new JTextField(10);
+
+        startMain = new JButton("Start Main Bot");
+        startMain.setBackground(new Color(0x2E7D32));
+        startMain.setForeground(Color.WHITE);
+        startMain.addActionListener(e -> startBot(true));
+
+        startBuilder = new JButton("Start Builder Bot");
+        startBuilder.setBackground(new Color(0x2E7D32));
+        startBuilder.setForeground(Color.WHITE);
+        startBuilder.addActionListener(e -> startBot(false));
+
+        stopButton = new JButton("Stop (" + STOP_KEY_NAME + ")");
+        stopButton.setBackground(new Color(0xC62828));
+        stopButton.setForeground(Color.WHITE);
+        stopButton.addActionListener(e -> stopAll());
+
+        statusLabel = new JLabel();
+        statusLabel.setFont(statusLabel.getFont().deriveFont(Font.BOLD, 14f));
+
+        alwaysOnTop = new JCheckBox("Always on top");
+        alwaysOnTop.addActionListener(e -> frame.setAlwaysOnTop(alwaysOnTop.isSelected()));
+
+        logArea = new JTextArea();
+        logArea.setEditable(false);
+        logArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+        logArea.setLineWrap(true);
+        logArea.setWrapStyleWord(true);
+    }
+
+    private JPanel buildConnectionPanel() {
+        JPanel p = titledPanel("Connection");
+        GridBagConstraints c = baseConstraints();
+
+        addRow(p, c, 0, "Input mode", modeBox, null);
+        addRow(p, c, 1, "ADB path", adbPathField, browseButton);
+        addRow(p, c, 2, "ADB serial", serialField, testButton);
+
+        c.gridx = 1;
+        c.gridy = 3;
+        c.gridwidth = 2;
+        p.add(connLabel, c);
+        return p;
+    }
+
+    private JPanel buildBotsPanel() {
+        JPanel row = new JPanel(new GridLayout(1, 2, 12, 0));
+
+        JPanel main = titledPanel("Main base");
+        GridBagConstraints c = baseConstraints();
+        addRow(main, c, 0, "Target gold", mainGoldField, null);
+        addRow(main, c, 1, "Target elixir", mainElixirField, null);
+        addRow(main, c, 2, "Enemy min loot", enemyLootField, null);
+        addButtonRow(main, c, 3, startMain);
+
+        JPanel builder = titledPanel("Builder base");
+        c = baseConstraints();
+        addRow(builder, c, 0, "Target gold", builderGoldField, null);
+        addRow(builder, c, 1, "Target elixir", builderElixirField, null);
+        c.gridy = 2;
+        c.weighty = 1; // розтягнути, щоб кнопка була внизу, як у Main
+        builder.add(Box.createVerticalGlue(), c);
+        c.weighty = 0;
+        addButtonRow(builder, c, 3, startBuilder);
+
+        row.add(main);
+        row.add(builder);
+        return row;
+    }
+
+    private JPanel buildLogPanel() {
+        JPanel p = titledPanel("Log");
+        p.setLayout(new BorderLayout(0, 6));
+
+        JScrollPane scroll = new JScrollPane(logArea);
+        scroll.setPreferredSize(new Dimension(100, 200));
+        p.add(scroll, BorderLayout.CENTER);
+
+        JButton clear = new JButton("Clear");
+        clear.addActionListener(e -> logArea.setText(""));
+        JPanel south = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        south.add(clear);
+        p.add(south, BorderLayout.SOUTH);
+        return p;
+    }
+
+    private JPanel buildStatusBar() {
+        JPanel bar = new JPanel(new BorderLayout(12, 0));
+        bar.add(statusLabel, BorderLayout.WEST);
+
+        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
+        right.add(alwaysOnTop);
+        right.add(new JLabel("Stop hotkey: " + STOP_KEY_NAME));
+        right.add(stopButton);
+        bar.add(right, BorderLayout.EAST);
+        return bar;
+    }
+
+    private static JPanel titledPanel(String title) {
+        JPanel p = new JPanel(new GridBagLayout());
+        p.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(title),
+                new EmptyBorder(6, 8, 8, 8)));
+        return p;
+    }
+
+    private static GridBagConstraints baseConstraints() {
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(4, 4, 4, 4);
+        c.anchor = GridBagConstraints.WEST;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        return c;
+    }
+
+    private static void addRow(JPanel p, GridBagConstraints c, int row, String label, JComponent field, JComponent extra) {
+        c.gridy = row;
+        c.gridwidth = 1;
+
+        c.gridx = 0;
+        c.weightx = 0;
+        p.add(new JLabel(label), c);
+
+        c.gridx = 1;
+        c.weightx = 1;
+        p.add(field, c);
+
+        if (extra != null) {
+            c.gridx = 2;
+            c.weightx = 0;
+            p.add(extra, c);
+        }
+    }
+
+    private static void addButtonRow(JPanel p, GridBagConstraints c, int row, JButton button) {
+        c.gridy = row;
+        c.gridx = 0;
+        c.gridwidth = 3;
+        c.weightx = 1;
+        c.insets = new Insets(10, 4, 4, 4);
+        p.add(button, c);
+        c.insets = new Insets(4, 4, 4, 4);
+        c.gridwidth = 1;
+    }
+
+    // ---------------------------------------------------------------- actions
+
+    private void startBot(boolean main) {
+        final BotConfig config;
+        try {
+            config = readConfig();
+        } catch (IllegalArgumentException ex) {
+            setStatus(ex.getMessage(), RED);
+            System.out.println("Cannot start: " + ex.getMessage());
+            return;
+        }
+
+        saveSettings();
+        final ContextFactory factory = contextFactory();
+        final String name = main ? "Main bot" : "Builder bot";
+
+        running = true;
+        updateControls();
+        setStatus("Running: " + name, GREEN);
+        System.out.println("Starting " + name + " (" + modeBox.getSelectedItem() + ")");
+
+        Thread thread = new Thread(() -> {
+            boolean failed = false;
+            try {
+                if (main) {
+                    Main bot = new Main(config, factory);
+                    mainBot = bot;
+                    bot.run();
+                } else {
+                    Builder bot = new Builder(config, factory);
+                    builderBot = bot;
+                    bot.run();
+                }
+            } catch (Exception ex) {
+                failed = true;
+                ex.printStackTrace();
+            } finally {
+                mainBot = null;
+                builderBot = null;
+            }
+
+            final boolean error = failed;
+            SwingUtilities.invokeLater(() -> {
+                running = false;
+                updateControls();
+                if (error) {
+                    setStatus("Stopped with an error - see log", RED);
+                } else {
+                    setStatus("Idle", GRAY);
+                }
+                System.out.println(name + " finished");
+            });
+        }, "bot-thread");
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    private void stopAll() {
+        if (!running) {
+            return;
+        }
+
+        Main m = mainBot;
+        Builder b = builderBot;
+        if (m != null) {
+            m.stop();
+        }
+        if (b != null) {
+            b.stop();
+        }
+
+        System.out.println("Stop requested (" + STOP_KEY_NAME + ")");
+        SwingUtilities.invokeLater(() -> {
+            if (running) {
+                setStatus("Stopping...", AMBER);
+            }
+        });
+    }
+
+    private ContextFactory contextFactory() {
+        final boolean adb = MODE_ADB.equals(modeBox.getSelectedItem());
+        final String adbPath = adbPathField.getText().trim().isEmpty() ? "adb" : adbPathField.getText().trim();
+        final String serial = serialField.getText().trim();
+        return adb ? () -> GameContext.adb(adbPath, serial) : GameContext::robot;
+    }
+
+    private void browseAdb() {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Select adb executable");
+        File current = new File(adbPathField.getText().trim());
+        if (current.getParentFile() != null && current.getParentFile().isDirectory()) {
+            chooser.setCurrentDirectory(current.getParentFile());
+        }
+        if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+            adbPathField.setText(chooser.getSelectedFile().getAbsolutePath());
+        }
+    }
+
+    private void testConnection() {
+        final String adbPath = adbPathField.getText().trim().isEmpty() ? "adb" : adbPathField.getText().trim();
+        final String serial = serialField.getText().trim();
+
+        testButton.setEnabled(false);
+        showConnection("Checking...", GRAY, null);
+
+        Thread thread = new Thread(() -> {
+            String text;
+            Color color;
+            String tooltip = null;
+            try {
+                Region bounds = new AdbScreenSource(new Adb(adbPath, serial)).bounds();
+                boolean ok = bounds.width == 1920 && bounds.height == 1080;
+                text = (ok ? "Connected: " : "Connected, but 1920x1080 is expected: ")
+                        + bounds.width + "x" + bounds.height;
+                color = ok ? GREEN : AMBER;
+            } catch (Exception ex) {
+                String message = String.valueOf(ex.getMessage());
+                text = "Failed: " + (message.length() > 90 ? message.substring(0, 90) + "..." : message);
+                tooltip = message;
+                color = RED;
+            }
+
+            final String t = text;
+            final Color col = color;
+            final String tip = tooltip;
+            SwingUtilities.invokeLater(() -> {
+                showConnection(t, col, tip);
+                updateControls();
+            });
+        }, "adb-test");
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    private void showConnection(String text, Color color, String tooltip) {
+        connLabel.setText(text);
+        connLabel.setForeground(color);
+        connLabel.setToolTipText(tooltip);
+    }
+
+    private void setStatus(String text, Color color) {
+        statusLabel.setText("\u25CF " + text);
+        statusLabel.setForeground(color);
+    }
+
+    /** Вмикає/вимикає елементи залежно від стану (працює бот чи ні) і вибраного режиму. */
+    private void updateControls() {
+        boolean idle = !running;
+        boolean adb = MODE_ADB.equals(modeBox.getSelectedItem());
+
+        modeBox.setEnabled(idle);
+        adbPathField.setEnabled(idle && adb);
+        serialField.setEnabled(idle && adb);
+        browseButton.setEnabled(idle && adb);
+        testButton.setEnabled(idle && adb);
+        if (!adb) {
+            showConnection(" ", GRAY, null);
+        }
+
+        mainGoldField.setEnabled(idle);
+        mainElixirField.setEnabled(idle);
+        enemyLootField.setEnabled(idle);
+        builderGoldField.setEnabled(idle);
+        builderElixirField.setEnabled(idle);
+
+        startMain.setEnabled(idle);
+        startBuilder.setEnabled(idle);
+        stopButton.setEnabled(running);
+    }
+
+    // --------------------------------------------------------------- settings
+
+    private BotConfig readConfig() {
+        BotConfig config = new BotConfig();
+        config.mainTargetGold = parseNumber(mainGoldField, "Main target gold");
+        config.mainTargetElixir = parseNumber(mainElixirField, "Main target elixir");
+        config.enemyMinLootTotal = parseNumber(enemyLootField, "Enemy min loot");
+        config.builderTargetGold = parseNumber(builderGoldField, "Builder target gold");
+        config.builderTargetElixir = parseNumber(builderElixirField, "Builder target elixir");
+        return config;
+    }
+
+    private static int parseNumber(JTextField field, String name) {
+        String text = field.getText().replaceAll("[\\s,._]", "");
+        try {
+            int value = Integer.parseInt(text);
+            if (value < 0) {
+                throw new NumberFormatException();
+            }
+            return value;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(name + " must be a whole number");
+        }
+    }
+
+    private void loadSettings() {
+        BotConfig d = new BotConfig();
+
+        modeBox.setSelectedItem(prefs.get("mode", MODE_ROBOT));
+        adbPathField.setText(prefs.get("adbPath", "adb"));
+        serialField.setText(prefs.get("serial", "emulator-5554"));
+
+        mainGoldField.setText(prefs.get("mainGold", String.valueOf(d.mainTargetGold)));
+        mainElixirField.setText(prefs.get("mainElixir", String.valueOf(d.mainTargetElixir)));
+        enemyLootField.setText(prefs.get("enemyLoot", String.valueOf(d.enemyMinLootTotal)));
+        builderGoldField.setText(prefs.get("builderGold", String.valueOf(d.builderTargetGold)));
+        builderElixirField.setText(prefs.get("builderElixir", String.valueOf(d.builderTargetElixir)));
+
+        alwaysOnTop.setSelected(prefs.getBoolean("alwaysOnTop", false));
+        frame.setAlwaysOnTop(alwaysOnTop.isSelected());
+    }
+
+    private void saveSettings() {
+        prefs.put("mode", String.valueOf(modeBox.getSelectedItem()));
+        prefs.put("adbPath", adbPathField.getText().trim());
+        prefs.put("serial", serialField.getText().trim());
+
+        prefs.put("mainGold", mainGoldField.getText().trim());
+        prefs.put("mainElixir", mainElixirField.getText().trim());
+        prefs.put("enemyLoot", enemyLootField.getText().trim());
+        prefs.put("builderGold", builderGoldField.getText().trim());
+        prefs.put("builderElixir", builderElixirField.getText().trim());
+
+        prefs.putBoolean("alwaysOnTop", alwaysOnTop.isSelected());
+    }
+
+    // ----------------------------------------------------------------- hotkey
+
+    private void registerHotkey() {
+        // JNativeHook дуже балакучий на рівні INFO
+        Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
+        logger.setLevel(Level.WARNING);
+        logger.setUseParentHandlers(false);
 
         try {
             GlobalScreen.registerNativeHook();
         } catch (NativeHookException ex) {
-            ex.printStackTrace();
+            System.out.println("Global hotkey unavailable: " + ex.getMessage());
+            return;
         }
 
         GlobalScreen.addNativeKeyListener(new NativeKeyListener() {
             @Override
             public void nativeKeyPressed(NativeKeyEvent e) {
-                if (e.getKeyCode() == NativeKeyEvent.VC_F9) {
-                    if (mainBot != null) {
-                        mainBot.stop();
-                    }
-                    if (builderBot != null) {
-                        builderBot.stop();
-                    }
-                    System.out.println("F9 pressed - stopping bots");
+                if (e.getKeyCode() == STOP_KEY) {
+                    stopAll();
                 }
             }
 
@@ -42,140 +543,54 @@ public class BotGui {
             @Override
             public void nativeKeyTyped(NativeKeyEvent e) {}
         });
-
-        JFrame frame = new JFrame("Bot Control");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 460);
-        frame.setLayout(new GridLayout(0, 2, 8, 8));
-
-        JTextField mainGoldField = new JTextField("9000000");
-        JTextField mainElixirField = new JTextField("9000000");
-        JTextField enemyLootField = new JTextField("1000000");
-
-        JTextField builderGoldField = new JTextField("3000000");
-        JTextField builderElixirField = new JTextField("3000000");
-
-        JComboBox<String> modeBox = new JComboBox<>(new String[]{"Robot (PC screen)", "ADB (LDPlayer)"});
-        JTextField serialField = new JTextField("emulator-5554");
-        JTextField adbPathField = new JTextField("adb");
-
-        JButton startMain = new JButton("Start Main Bot");
-        JButton stopMain = new JButton("Stop Main Bot = F9");
-        JButton startBuilder = new JButton("Start Builder Bot");
-        JButton stopBuilder = new JButton("Stop Builder Bot = F9");
-
-        frame.add(new JLabel("Input mode:"));
-        frame.add(modeBox);
-
-        frame.add(new JLabel("ADB path:"));
-        frame.add(adbPathField);
-
-        frame.add(new JLabel("ADB serial:"));
-        frame.add(serialField);
-
-        frame.add(new JLabel("Main target gold:"));
-        frame.add(mainGoldField);
-
-        frame.add(new JLabel("Main target elixir:"));
-        frame.add(mainElixirField);
-
-        frame.add(new JLabel("Enemy min loot:"));
-        frame.add(enemyLootField);
-
-        frame.add(new JLabel("Builder target gold:"));
-        frame.add(builderGoldField);
-
-        frame.add(new JLabel("Builder target elixir:"));
-        frame.add(builderElixirField);
-
-        frame.add(startMain);
-        frame.add(stopMain);
-
-        frame.add(startBuilder);
-        frame.add(stopBuilder);
-
-        startMain.addActionListener(e -> {
-            BotConfig config = readConfig(
-                    mainGoldField,
-                    mainElixirField,
-                    enemyLootField,
-                    builderGoldField,
-                    builderElixirField
-            );
-
-            mainBot = new Main(config, contextFactory(modeBox, adbPathField, serialField));
-
-            new Thread(() -> {
-                try {
-                    mainBot.run();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }).start();
-        });
-
-        stopMain.addActionListener(e -> {
-            if (mainBot != null) {
-                mainBot.stop();
-                System.out.println("Stop Main clicked");
-            }
-        });
-
-        startBuilder.addActionListener(e -> {
-            BotConfig config = readConfig(
-                    mainGoldField,
-                    mainElixirField,
-                    enemyLootField,
-                    builderGoldField,
-                    builderElixirField
-            );
-
-            builderBot = new Builder(config, contextFactory(modeBox, adbPathField, serialField));
-
-            new Thread(() -> {
-                try {
-                    builderBot.run();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }).start();
-        });
-
-        stopBuilder.addActionListener(e -> {
-            if (builderBot != null) {
-                builderBot.stop();
-                System.out.println("Stop Builder clicked");
-            }
-        });
-
-        frame.setLocationRelativeTo(null);
-        frame.setAlwaysOnTop(true);
-        frame.setVisible(true);
     }
 
-    private ContextFactory contextFactory(JComboBox<String> modeBox, JTextField adbPathField, JTextField serialField) {
-        final boolean adb = modeBox.getSelectedIndex() == 1;
-        final String adbPath = adbPathField.getText().trim();
-        final String serial = serialField.getText().trim();
-        return adb ? () -> GameContext.adb(adbPath, serial) : GameContext::robot;
+    // -------------------------------------------------------------------- log
+
+    /** Дублює System.out / System.err у вікно логу (консоль IntelliJ теж працює). */
+    private void installLogCapture() {
+        System.setOut(new PrintStream(new LogStream(System.out), true, StandardCharsets.UTF_8));
+        System.setErr(new PrintStream(new LogStream(System.err), true, StandardCharsets.UTF_8));
     }
 
-    private BotConfig readConfig(
-            JTextField mainGold,
-            JTextField mainElixir,
-            JTextField enemyLoot,
-            JTextField builderGold,
-            JTextField builderElixir
-    ) {
-        BotConfig config = new BotConfig();
+    private void appendLog(String line) {
+        SwingUtilities.invokeLater(() -> {
+            logArea.append(line + "\n");
 
-        config.mainTargetGold = Integer.parseInt(mainGold.getText());
-        config.mainTargetElixir = Integer.parseInt(mainElixir.getText());
-        config.enemyMinLootTotal = Integer.parseInt(enemyLoot.getText());
+            if (logArea.getLineCount() > MAX_LOG_LINES) {
+                try {
+                    int cut = logArea.getLineEndOffset(logArea.getLineCount() - MAX_LOG_LINES + 500);
+                    logArea.getDocument().remove(0, cut);
+                } catch (Exception ignored) {
+                }
+            }
+            logArea.setCaretPosition(logArea.getDocument().getLength());
+        });
+    }
 
-        config.builderTargetGold = Integer.parseInt(builderGold.getText());
-        config.builderTargetElixir = Integer.parseInt(builderElixir.getText());
+    private class LogStream extends OutputStream {
+        private final PrintStream original;
+        private final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-        return config;
+        LogStream(PrintStream original) {
+            this.original = original;
+        }
+
+        @Override
+        public synchronized void write(int b) {
+            original.write(b);
+            if (b == '\n') {
+                String line = buffer.toString(StandardCharsets.UTF_8).replace("\r", "");
+                buffer.reset();
+                appendLog(line);
+            } else {
+                buffer.write(b);
+            }
+        }
+
+        @Override
+        public void flush() {
+            original.flush();
+        }
     }
 }
