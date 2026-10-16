@@ -61,6 +61,14 @@ public class BotGui {
     private JLabel attacksLabel;
     private volatile String stopReason;
 
+    private final TelegramNotifier telegram = new TelegramNotifier();
+    private JCheckBox tgEnabled;
+    private JPasswordField tgTokenField;
+    private JTextField tgChatField;
+    private JButton tgConnectButton;
+    private JButton tgTestButton;
+    private JLabel tgLabel;
+
     private JButton startMain;
     private JButton startBuilder;
     private JButton stopButton;
@@ -96,8 +104,12 @@ public class BotGui {
         JPanel root = new JPanel(new BorderLayout(0, 10));
         root.setBorder(new EmptyBorder(12, 12, 12, 12));
 
+        JPanel upper = new JPanel(new BorderLayout(0, 10));
+        upper.add(buildConnectionPanel(), BorderLayout.NORTH);
+        upper.add(buildTelegramPanel(), BorderLayout.CENTER);
+
         JPanel top = new JPanel(new BorderLayout(0, 10));
-        top.add(buildConnectionPanel(), BorderLayout.NORTH);
+        top.add(upper, BorderLayout.NORTH);
         top.add(buildBotsPanel(), BorderLayout.CENTER);
 
         root.add(top, BorderLayout.NORTH);
@@ -124,8 +136,8 @@ public class BotGui {
             }
         });
 
-        frame.setSize(880, 700);
-        frame.setMinimumSize(new Dimension(780, 600));
+        frame.setSize(880, 800);
+        frame.setMinimumSize(new Dimension(780, 700));
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
@@ -156,6 +168,18 @@ public class BotGui {
         mainMaxAttacksField.putClientProperty("JTextField.placeholderText", "0 = no limit");
         builderMaxAttacksField.putClientProperty("JTextField.placeholderText", "0 = no limit");
         attacksLabel = new JLabel("Attacks: 0");
+
+        tgEnabled = new JCheckBox("Send a message when the bot stops");
+        tgTokenField = new JPasswordField(24);
+        tgTokenField.putClientProperty("JTextField.placeholderText", "token from @BotFather");
+        tgChatField = new JTextField(12);
+        tgChatField.putClientProperty("JTextField.placeholderText", "filled in by Connect");
+        tgConnectButton = new JButton("Connect");
+        tgConnectButton.setToolTipText("Click, then send /start to your bot in Telegram");
+        tgConnectButton.addActionListener(e -> telegramConnect());
+        tgTestButton = new JButton("Send test");
+        tgTestButton.addActionListener(e -> telegramTest());
+        tgLabel = new JLabel(" ");
 
         startMain = new JButton("Start Main Bot");
         startMain.setBackground(new Color(0x2E7D32));
@@ -197,6 +221,26 @@ public class BotGui {
         c.gridy = 3;
         c.gridwidth = 2;
         p.add(connLabel, c);
+        return p;
+    }
+
+    private JPanel buildTelegramPanel() {
+        JPanel p = titledPanel("Telegram notifications");
+        GridBagConstraints c = baseConstraints();
+
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 3;
+        p.add(tgEnabled, c);
+        c.gridwidth = 1;
+
+        addRow(p, c, 1, "Bot token", tgTokenField, tgConnectButton);
+        addRow(p, c, 2, "Chat ID", tgChatField, tgTestButton);
+
+        c.gridx = 1;
+        c.gridy = 3;
+        c.gridwidth = 2;
+        p.add(tgLabel, c);
         return p;
     }
 
@@ -314,6 +358,14 @@ public class BotGui {
             return;
         }
 
+        final String name = main ? "Main bot" : "Builder bot";
+        final boolean notify = tgEnabled.isSelected();
+        final String tgToken = new String(tgTokenField.getPassword()).trim();
+        final String tgChat = tgChatField.getText().trim();
+        if (notify && (tgToken.isEmpty() || tgChat.isEmpty())) {
+            System.out.println("Telegram notifications are on, but the token or chat ID is empty - press Connect first");
+        }
+
         stopReason = null;
         attacksLabel.setText("Attacks: 0");
         config.events = new BotEvents() {
@@ -326,12 +378,15 @@ public class BotGui {
             public void stopped(String reason, int totalAttacks) {
                 stopReason = reason;
                 System.out.println("Finished: " + reason + " (attacks: " + totalAttacks + ")");
+                if (notify && !tgToken.isEmpty() && !tgChat.isEmpty() && !reason.startsWith("Stopped by user")) {
+                    sendTelegram(tgToken, tgChat,
+                            "BotOCR: " + name + " stopped\nReason: " + reason + "\nAttacks: " + totalAttacks);
+                }
             }
         };
 
         saveSettings();
         final ContextFactory factory = contextFactory();
-        final String name = main ? "Main bot" : "Builder bot";
 
         running = true;
         stopRequested = false;
@@ -477,6 +532,117 @@ public class BotGui {
         thread.start();
     }
 
+    // --------------------------------------------------------------- telegram
+
+    private void sendTelegram(String token, String chatId, String text) {
+        Thread t = new Thread(() -> {
+            try {
+                telegram.sendMessage(token, chatId, text);
+                System.out.println("Telegram notification sent");
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            } catch (Exception ex) {
+                System.out.println("Telegram notification failed: " + ex.getMessage());
+            }
+        }, "telegram-send");
+        t.setDaemon(true);
+        t.start();
+    }
+
+    private void telegramConnect() {
+        final String token = new String(tgTokenField.getPassword()).trim();
+        if (token.isEmpty()) {
+            showTelegram("Paste the bot token from @BotFather first", RED);
+            return;
+        }
+
+        tgConnectButton.setEnabled(false);
+        tgTestButton.setEnabled(false);
+        showTelegram("Checking token...", GRAY);
+
+        Thread t = new Thread(() -> {
+            String text;
+            Color color;
+            try {
+                String bot = telegram.checkToken(token);
+                SwingUtilities.invokeLater(() -> showTelegram(
+                        "Open @" + bot + " in Telegram and send /start (waiting up to 60 s)...", AMBER));
+
+                String chat = telegram.waitForChatId(token, 60);
+                if (chat == null) {
+                    text = "No message received. Send /start to @" + bot + " and press Connect again";
+                    color = AMBER;
+                } else {
+                    final String id = chat;
+                    SwingUtilities.invokeLater(() -> tgChatField.setText(id));
+                    telegram.sendMessage(token, chat, "BotOCR is connected. You will get a message here when the bot stops.");
+                    text = "Connected to chat " + chat;
+                    color = GREEN;
+                }
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                return;
+            } catch (Exception ex) {
+                text = "Failed: " + ex.getMessage();
+                color = RED;
+            }
+
+            final String t1 = text;
+            final Color c1 = color;
+            SwingUtilities.invokeLater(() -> {
+                showTelegram(t1, c1);
+                tgConnectButton.setEnabled(true);
+                tgTestButton.setEnabled(true);
+            });
+        }, "telegram-connect");
+        t.setDaemon(true);
+        t.start();
+    }
+
+    private void telegramTest() {
+        final String token = new String(tgTokenField.getPassword()).trim();
+        final String chat = tgChatField.getText().trim();
+        if (token.isEmpty() || chat.isEmpty()) {
+            showTelegram("Press Connect first (token and chat ID are needed)", RED);
+            return;
+        }
+
+        tgConnectButton.setEnabled(false);
+        tgTestButton.setEnabled(false);
+        showTelegram("Sending...", GRAY);
+
+        Thread t = new Thread(() -> {
+            String text;
+            Color color;
+            try {
+                telegram.sendMessage(token, chat, "BotOCR test message");
+                text = "Test message sent";
+                color = GREEN;
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                return;
+            } catch (Exception ex) {
+                text = "Failed: " + ex.getMessage();
+                color = RED;
+            }
+
+            final String t1 = text;
+            final Color c1 = color;
+            SwingUtilities.invokeLater(() -> {
+                showTelegram(t1, c1);
+                tgConnectButton.setEnabled(true);
+                tgTestButton.setEnabled(true);
+            });
+        }, "telegram-test");
+        t.setDaemon(true);
+        t.start();
+    }
+
+    private void showTelegram(String text, Color color) {
+        tgLabel.setText(text);
+        tgLabel.setForeground(color);
+    }
+
     private void showConnection(String text, Color color, String tooltip) {
         connLabel.setText(text);
         connLabel.setForeground(color);
@@ -567,6 +733,9 @@ public class BotGui {
         enemyLootField.setText(prefs.get("enemyLoot", String.valueOf(d.enemyMinLootTotal)));
         builderGoldField.setText(prefs.get("builderGold", String.valueOf(d.builderTargetGold)));
         builderElixirField.setText(prefs.get("builderElixir", String.valueOf(d.builderTargetElixir)));
+        tgEnabled.setSelected(prefs.getBoolean("tgEnabled", false));
+        tgTokenField.setText(prefs.get("tgToken", ""));
+        tgChatField.setText(prefs.get("tgChatId", ""));
         mainMaxAttacksField.setText(prefs.get("mainMaxAttacks", "0"));
         builderMaxAttacksField.setText(prefs.get("builderMaxAttacks", "0"));
 
@@ -584,6 +753,9 @@ public class BotGui {
         prefs.put("enemyLoot", enemyLootField.getText().trim());
         prefs.put("builderGold", builderGoldField.getText().trim());
         prefs.put("builderElixir", builderElixirField.getText().trim());
+        prefs.putBoolean("tgEnabled", tgEnabled.isSelected());
+        prefs.put("tgToken", new String(tgTokenField.getPassword()).trim());
+        prefs.put("tgChatId", tgChatField.getText().trim());
         prefs.put("mainMaxAttacks", mainMaxAttacksField.getText().trim());
         prefs.put("builderMaxAttacks", builderMaxAttacksField.getText().trim());
 
