@@ -3,6 +3,7 @@ import java.util.Random;
 public class Builder {
 
     private volatile boolean running = true;
+    private int attacks = 0;
     private final BotConfig config;
     private final ContextFactory contextFactory;
     private final Random random = new Random();
@@ -39,6 +40,22 @@ public class Builder {
     }
 
     public void run() throws Exception {
+        String reason = "Error";
+        try {
+            reason = runLoop();
+        } catch (InterruptedException e) {
+            reason = "Stopped by user";
+            throw e;
+        } catch (Exception e) {
+            reason = "Error: " + e.getMessage();
+            throw e;
+        } finally {
+            config.events.stopped(reason, attacks);
+        }
+    }
+
+    private String runLoop() throws Exception {
+        String reason = "Stopped by user";
         final GameContext ctx = contextFactory.create();
         final Bot bot = new Bot(ctx);
         final OcrService ocrService = new OcrService(ctx.screen);
@@ -90,6 +107,10 @@ public class Builder {
             sleep(500, 150);
             if (shouldStop()) break;
 
+            attacks++;
+            System.out.println("Attacks done: " + attacks);
+            config.events.attackFinished(attacks);
+
             actions.zoomOutMany(1002, 757, 1);
             sleep(300, 150);
             if (shouldStop()) break;
@@ -106,6 +127,12 @@ public class Builder {
             sleep(2000, 350);
             if (shouldStop()) break;
 
+            if (config.builderMaxAttacks > 0 && attacks >= config.builderMaxAttacks) {
+                System.out.println("Attack limit reached");
+                reason = "Attack limit reached (" + attacks + ")";
+                break;
+            }
+
             int myGold = ocrService.readStableDigitsAsInt(Regions.MY_GOLD);
             int myElixir = ocrService.readStableDigitsAsInt(Regions.MY_ELIXIR);
 
@@ -119,11 +146,13 @@ public class Builder {
 
             if (myGold >= config.builderTargetGold && myElixir >= config.builderTargetElixir) {
                 System.out.println("Target reached");
+                reason = "Target reached";
                 break;
             }
         }
 
         System.out.println("Builder bot stopped");
+        return reason;
     }
 
     public static void main(String[] args) throws Exception {
