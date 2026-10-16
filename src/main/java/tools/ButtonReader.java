@@ -14,7 +14,11 @@ public class ButtonReader {
 
     public static void main(String[] args) {
         try {
-            AdbScreenSource screen = new AdbScreenSource(new Adb("C:\\LDPlayer\\LDPlayer14\\adb.exe", SERIAL));
+            String found = AdbLocator.findAdb();
+            String adbPath = found != null ? found : ADB_PATH;
+            String serial = AdbLocator.resolveSerial(adbPath, SERIAL); // сам підключиться до LDPlayer, якщо треба
+            System.out.println("ADB: " + adbPath + ", device: " + serial);
+            AdbScreenSource screen = new AdbScreenSource(new Adb(adbPath, serial));
             ImagineServer saver = new ImagineServer();
             Scanner in = new Scanner(System.in);
 
