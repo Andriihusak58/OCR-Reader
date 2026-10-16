@@ -14,6 +14,7 @@ This is a personal/educational automation project. Using bots in Clash of Clans 
 - **Two modes** — Main (farming) bot and Builder Base bot, controlled independently
 - **Two input modes** — `Robot` (game on your PC screen) or `ADB` (game in an Android emulator such as LDPlayer, so you can keep using the PC in parallel)
 - **GUI control panel** — dark Swing UI with live log, status indicator, ADB connection check, and settings that are remembered between runs
+- **Telegram notifications** — optional message to your own Telegram bot when the bot stops (limit reached, target reached, error)
 - **Global hotkey** — press `F9` anywhere (even with the game window focused) to stop the running bot instantly
 - **Dev tools** (`tools/` folder) — helper scripts used to find screen coordinates and capture new UI templates
 
@@ -81,6 +82,17 @@ The bot reads `images/` (templates) and `tessdata/` (OCR data) from the **workin
 3a. Optionally set **Stop after attacks** (0 or empty = no limit). The status bar shows how many attacks were completed in the current run, and the reason the bot stopped is shown when it finishes
 4. Click **Start Main Bot** or **Start Builder Bot**
 5. Press **F9** at any time to stop the running bot immediately
+
+## Telegram notifications
+
+Every user connects their own bot, so no token is shared or shipped with the program:
+
+1. In Telegram open [@BotFather](https://t.me/BotFather), send `/newbot` and copy the token it gives you
+2. Paste the token into **Bot token** in the GUI and press **Connect**
+3. Open your new bot in Telegram and send `/start`. The chat ID is filled in automatically and you get a confirmation message
+4. Tick **Send a message when the bot stops** (use **Send test** to check it)
+
+You get a message with the stop reason and the number of attacks. Stopping with F9 or the Stop button does not send one. The token is stored in your user settings (Windows registry), not in the program folder, so sharing the folder does not share your token
 
 ## Known limitations
 
