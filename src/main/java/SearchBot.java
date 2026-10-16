@@ -1,5 +1,3 @@
-import com.sun.source.util.SourcePositions;
-
 import java.util.Random;
 
 public class SearchBot {
@@ -72,7 +70,7 @@ public class SearchBot {
             actions.battleClick(Regions.CASE);
             sleep(4150, 150);
             if (shouldStop()) return;
-            System.out.println("uuhuhuhuhuhki");
+
             actions.battleClick(Regions.CONTINUE);
             sleep(200, 150);
             if (shouldStop()) return;

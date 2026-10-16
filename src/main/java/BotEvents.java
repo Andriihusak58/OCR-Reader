@@ -7,6 +7,10 @@ public interface BotEvents {
     BotEvents NONE = new BotEvents() {
     };
 
+    /** The bot did something meaningful (read the screen, found a base ...). Used by the stuck watchdog. */
+    default void progress() {
+    }
+
     /** A battle was completed. totalAttacks counts attacks in the current run. */
     default void attackFinished(int totalAttacks) {
     }

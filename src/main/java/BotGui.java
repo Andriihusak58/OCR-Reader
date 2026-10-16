@@ -368,14 +368,26 @@ public class BotGui {
 
         stopReason = null;
         attacksLabel.setText("Attacks: 0");
+        final Watchdog watchdog = new Watchdog(config.stuckTimeoutMinutes * 60_000L);
+        final int stuckMinutes = config.stuckTimeoutMinutes;
         config.events = new BotEvents() {
             @Override
+            public void progress() {
+                watchdog.touch();
+            }
+
+            @Override
             public void attackFinished(int totalAttacks) {
+                watchdog.touch();
                 SwingUtilities.invokeLater(() -> attacksLabel.setText("Attacks: " + totalAttacks));
             }
 
             @Override
             public void stopped(String reason, int totalAttacks) {
+                watchdog.stop();
+                if (watchdog.triggered()) {
+                    reason = "No progress for " + stuckMinutes + " min - the bot seems stuck (check the game screen)";
+                }
                 stopReason = reason;
                 System.out.println("Finished: " + reason + " (attacks: " + totalAttacks + ")");
                 if (notify && !tgToken.isEmpty() && !tgChat.isEmpty() && !reason.startsWith("Stopped by user")) {
@@ -427,7 +439,7 @@ public class BotGui {
                 if (error) {
                     setStatus("Stopped with an error - see log", RED);
                 } else if (stopReason != null && !stopReason.startsWith("Stopped by user")) {
-                    setStatus("Finished: " + stopReason, GRAY);
+                    setStatus("Finished: " + stopReason, stopReason.startsWith("No progress") ? RED : GRAY);
                 } else {
                     setStatus("Idle", GRAY);
                 }
@@ -437,6 +449,7 @@ public class BotGui {
         thread.setDaemon(true);
         botThread = thread;
         thread.start();
+        watchdog.start(() -> SwingUtilities.invokeLater(this::stopAll));
     }
 
     private void stopAll() {
