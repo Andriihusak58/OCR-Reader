@@ -58,6 +58,8 @@ public class FarmingBot {
                 continue;
             }
 
+            config.events.progress();
+
             if (myGold >= config.mainTargetGold && myElixir >= config.mainTargetElixir) {
                 System.out.println("Target reached");
                 reason = "Target reached";
@@ -73,6 +75,8 @@ public class FarmingBot {
                 reason = "Could not find a good base";
                 break;
             }
+
+            config.events.progress();
 
             boolean attacked = attackBot.attack();
 

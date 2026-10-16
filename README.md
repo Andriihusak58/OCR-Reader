@@ -15,6 +15,7 @@ This is a personal/educational automation project. Using bots in Clash of Clans 
 - **Two input modes** — `Robot` (game on your PC screen) or `ADB` (game in an Android emulator such as LDPlayer, so you can keep using the PC in parallel)
 - **GUI control panel** — dark Swing UI with live log, status indicator, ADB connection check, and settings that are remembered between runs
 - **Telegram notifications** — optional message to your own Telegram bot when the bot stops (limit reached, target reached, error)
+- **Stuck watchdog** — if the bot makes no progress for 6 minutes (for example it is stuck on an unexpected popup), it stops itself and, if enabled, sends a Telegram message
 - **Global hotkey** — press `F9` anywhere (even with the game window focused) to stop the running bot instantly
 - **Dev tools** (`tools/` folder) — helper scripts used to find screen coordinates and capture new UI templates
 
