@@ -71,7 +71,19 @@ public class SearchBot {
             sleep(4150, 150);
             if (shouldStop()) return;
 
-            actions.battleClick(Regions.CONTINUE);
+            // Wait for the Continue button and press it by template (retry instead of a blind click)
+            boolean continued = false;
+            for (int i = 0; i < 8 && !continued; i++) {
+                continued = bot.pressIfFound(UiElements.CONTINUE);
+                if (!continued) {
+                    sleep(500, 150);
+                    if (shouldStop()) return;
+                }
+            }
+            if (!continued) {
+                System.out.println("CONTINUE not found, clicking its region");
+                actions.battleClick(Regions.CONTINUE);
+            }
             sleep(200, 150);
             if (shouldStop()) return;
         }
