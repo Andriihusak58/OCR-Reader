@@ -134,6 +134,7 @@ public class SearchBot {
             }
 
             ocrFailCount = 0;
+            config.events.progress();
 
             if (gold + elixir >= config.enemyMinLootTotal) {
                 System.out.println("Good base found");

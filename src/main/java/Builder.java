@@ -144,6 +144,8 @@ public class Builder {
                 continue;
             }
 
+            config.events.progress();
+
             if (myGold >= config.builderTargetGold && myElixir >= config.builderTargetElixir) {
                 System.out.println("Target reached");
                 reason = "Target reached";
