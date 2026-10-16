@@ -13,7 +13,7 @@ public class Regions {
     public static final Region ELIXIR_CART = new Region(1370, 2,20,30);
     public static final Region COLLECT = new Region(1300,880,200,75);
     public static final Region CASE = new Region(757,738,310,110);
-    public static final Region CONTINUE = new Region(845, 932, 250, 105);
+    public static final Region CONTINUE = new Region(820, 920, 300, 130);
 
     public static final Region Attack_DC = new Region(28, 862, 198, 198);
     public static final Region Find_Now = new Region(1244,650,340,120);
