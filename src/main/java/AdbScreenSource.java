@@ -13,20 +13,33 @@ public class AdbScreenSource implements ScreenSource {
         this.adb = adb;
     }
 
+    private static final int ATTEMPTS = 3;
+
     private BufferedImage fullFrame() {
+        IOException last = null;
         try {
-            byte[] png = adb.exec("exec-out", "screencap", "-p");
-            BufferedImage image = ImageIO.read(new ByteArrayInputStream(png));
-            if (image == null) {
-                throw new IOException("adb screencap returned no image");
+            for (int attempt = 1; attempt <= ATTEMPTS; attempt++) {
+                try {
+                    byte[] png = adb.exec("exec-out", "screencap", "-p");
+                    BufferedImage image = ImageIO.read(new ByteArrayInputStream(png));
+                    if (image == null) {
+                        throw new IOException("adb screencap returned no image");
+                    }
+                    return image;
+                } catch (IOException e) {
+                    last = e;
+                    if (attempt < ATTEMPTS) {
+                        System.out.println("ADB screenshot failed (attempt " + attempt + "/" + ATTEMPTS
+                                + "), retrying: " + e.getMessage());
+                        Thread.sleep(700);
+                    }
+                }
             }
-            return image;
-        } catch (IOException e) {
-            throw new IllegalStateException("ADB screenshot failed: " + e.getMessage(), e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException("ADB screenshot interrupted", e);
         }
+        throw new IllegalStateException("ADB screenshot failed: " + last.getMessage(), last);
     }
 
     @Override
@@ -40,6 +53,12 @@ public class AdbScreenSource implements ScreenSource {
         int y = Math.max(0, region.y);
         int w = Math.min(region.width, frame.getWidth() - x);
         int h = Math.min(region.height, frame.getHeight() - y);
+        if (w <= 0 || h <= 0) {
+            throw new IllegalStateException("Region " + region.x + "," + region.y + " " + region.width + "x"
+                    + region.height + " is outside the " + frame.getWidth() + "x" + frame.getHeight()
+                    + " emulator screen. The emulator must run at 1920x1080 "
+                    + "(LDPlayer > Settings > Game settings > Tablet 1920x1080)");
+        }
 
         // копія, щоб підзображення не тримало весь кадр у пам'яті
         BufferedImage copy = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
