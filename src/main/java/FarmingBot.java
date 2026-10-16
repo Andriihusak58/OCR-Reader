@@ -6,6 +6,7 @@ public class FarmingBot {
     private final BotConfig config;
 
     private volatile boolean running = true;
+    private int attacks = 0;
 
     public FarmingBot(BotConfig config, GameContext ctx) throws Exception {
         this.config = config;
@@ -21,6 +22,23 @@ public class FarmingBot {
     }
 
     public void run() throws Exception {
+        String reason = "Error";
+        try {
+            reason = runLoop();
+        } catch (InterruptedException e) {
+            reason = "Stopped by user";
+            throw e;
+        } catch (Exception e) {
+            reason = "Error: " + e.getMessage();
+            throw e;
+        } finally {
+            config.events.stopped(reason, attacks);
+        }
+    }
+
+    private String runLoop() throws Exception {
+        String reason = "Stopped by user";
+
         while (running) {
 
             searchBot.prepareHomeScreen();
@@ -33,8 +51,6 @@ public class FarmingBot {
             System.out.println("My gold: " + myGold);
             System.out.println("My elixir: " + myElixir);
 
-
-
             if (!running) break;
 
             if (myGold == -1 || myElixir == -1) {
@@ -44,6 +60,7 @@ public class FarmingBot {
 
             if (myGold >= config.mainTargetGold && myElixir >= config.mainTargetElixir) {
                 System.out.println("Target reached");
+                reason = "Target reached";
                 break;
             }
 
@@ -53,6 +70,7 @@ public class FarmingBot {
 
             if (!found) {
                 System.out.println("Could not find good base");
+                reason = "Could not find a good base";
                 break;
             }
 
@@ -62,10 +80,22 @@ public class FarmingBot {
 
             if (!attacked) {
                 System.out.println("Attack failed");
+                reason = "Attack failed";
+                break;
+            }
+
+            attacks++;
+            System.out.println("Attacks done: " + attacks);
+            config.events.attackFinished(attacks);
+
+            if (config.mainMaxAttacks > 0 && attacks >= config.mainMaxAttacks) {
+                System.out.println("Attack limit reached");
+                reason = "Attack limit reached (" + attacks + ")";
                 break;
             }
         }
 
         System.out.println("FarmingBot stopped");
+        return reason;
     }
-}
+}

@@ -56,6 +56,10 @@ public class BotGui {
     private JTextField enemyLootField;
     private JTextField builderGoldField;
     private JTextField builderElixirField;
+    private JTextField mainMaxAttacksField;
+    private JTextField builderMaxAttacksField;
+    private JLabel attacksLabel;
+    private volatile String stopReason;
 
     private JButton startMain;
     private JButton startBuilder;
@@ -147,6 +151,11 @@ public class BotGui {
         enemyLootField = new JTextField(10);
         builderGoldField = new JTextField(10);
         builderElixirField = new JTextField(10);
+        mainMaxAttacksField = new JTextField(10);
+        builderMaxAttacksField = new JTextField(10);
+        mainMaxAttacksField.putClientProperty("JTextField.placeholderText", "0 = no limit");
+        builderMaxAttacksField.putClientProperty("JTextField.placeholderText", "0 = no limit");
+        attacksLabel = new JLabel("Attacks: 0");
 
         startMain = new JButton("Start Main Bot");
         startMain.setBackground(new Color(0x2E7D32));
@@ -199,17 +208,19 @@ public class BotGui {
         addRow(main, c, 0, "Target gold", mainGoldField, null);
         addRow(main, c, 1, "Target elixir", mainElixirField, null);
         addRow(main, c, 2, "Enemy min loot", enemyLootField, null);
-        addButtonRow(main, c, 3, startMain);
+        addRow(main, c, 3, "Stop after attacks", mainMaxAttacksField, null);
+        addButtonRow(main, c, 4, startMain);
 
         JPanel builder = titledPanel("Builder base");
         c = baseConstraints();
         addRow(builder, c, 0, "Target gold", builderGoldField, null);
         addRow(builder, c, 1, "Target elixir", builderElixirField, null);
-        c.gridy = 2;
+        addRow(builder, c, 2, "Stop after attacks", builderMaxAttacksField, null);
+        c.gridy = 3;
         c.weighty = 1; // розтягнути, щоб кнопка була внизу, як у Main
         builder.add(Box.createVerticalGlue(), c);
         c.weighty = 0;
-        addButtonRow(builder, c, 3, startBuilder);
+        addButtonRow(builder, c, 4, startBuilder);
 
         row.add(main);
         row.add(builder);
@@ -237,6 +248,7 @@ public class BotGui {
         bar.add(statusLabel, BorderLayout.WEST);
 
         JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
+        right.add(attacksLabel);
         right.add(alwaysOnTop);
         right.add(new JLabel("Stop hotkey: " + STOP_KEY_NAME));
         right.add(stopButton);
@@ -302,6 +314,21 @@ public class BotGui {
             return;
         }
 
+        stopReason = null;
+        attacksLabel.setText("Attacks: 0");
+        config.events = new BotEvents() {
+            @Override
+            public void attackFinished(int totalAttacks) {
+                SwingUtilities.invokeLater(() -> attacksLabel.setText("Attacks: " + totalAttacks));
+            }
+
+            @Override
+            public void stopped(String reason, int totalAttacks) {
+                stopReason = reason;
+                System.out.println("Finished: " + reason + " (attacks: " + totalAttacks + ")");
+            }
+        };
+
         saveSettings();
         final ContextFactory factory = contextFactory();
         final String name = main ? "Main bot" : "Builder bot";
@@ -344,6 +371,8 @@ public class BotGui {
                 updateControls();
                 if (error) {
                     setStatus("Stopped with an error - see log", RED);
+                } else if (stopReason != null && !stopReason.startsWith("Stopped by user")) {
+                    setStatus("Finished: " + stopReason, GRAY);
                 } else {
                     setStatus("Idle", GRAY);
                 }
@@ -478,6 +507,8 @@ public class BotGui {
         enemyLootField.setEnabled(idle);
         builderGoldField.setEnabled(idle);
         builderElixirField.setEnabled(idle);
+        mainMaxAttacksField.setEnabled(idle);
+        builderMaxAttacksField.setEnabled(idle);
 
         startMain.setEnabled(idle);
         startBuilder.setEnabled(idle);
@@ -493,7 +524,17 @@ public class BotGui {
         config.enemyMinLootTotal = parseNumber(enemyLootField, "Enemy min loot");
         config.builderTargetGold = parseNumber(builderGoldField, "Builder target gold");
         config.builderTargetElixir = parseNumber(builderElixirField, "Builder target elixir");
+        config.mainMaxAttacks = parseOptionalNumber(mainMaxAttacksField, "Main attack limit");
+        config.builderMaxAttacks = parseOptionalNumber(builderMaxAttacksField, "Builder attack limit");
         return config;
+    }
+
+    /** Empty field means 0 (no limit). */
+    private static int parseOptionalNumber(JTextField field, String name) {
+        if (field.getText().trim().isEmpty()) {
+            return 0;
+        }
+        return parseNumber(field, name);
     }
 
     private static int parseNumber(JTextField field, String name) {
@@ -526,6 +567,8 @@ public class BotGui {
         enemyLootField.setText(prefs.get("enemyLoot", String.valueOf(d.enemyMinLootTotal)));
         builderGoldField.setText(prefs.get("builderGold", String.valueOf(d.builderTargetGold)));
         builderElixirField.setText(prefs.get("builderElixir", String.valueOf(d.builderTargetElixir)));
+        mainMaxAttacksField.setText(prefs.get("mainMaxAttacks", "0"));
+        builderMaxAttacksField.setText(prefs.get("builderMaxAttacks", "0"));
 
         alwaysOnTop.setSelected(prefs.getBoolean("alwaysOnTop", false));
         frame.setAlwaysOnTop(alwaysOnTop.isSelected());
@@ -541,6 +584,8 @@ public class BotGui {
         prefs.put("enemyLoot", enemyLootField.getText().trim());
         prefs.put("builderGold", builderGoldField.getText().trim());
         prefs.put("builderElixir", builderElixirField.getText().trim());
+        prefs.put("mainMaxAttacks", mainMaxAttacksField.getText().trim());
+        prefs.put("builderMaxAttacks", builderMaxAttacksField.getText().trim());
 
         prefs.putBoolean("alwaysOnTop", alwaysOnTop.isSelected());
     }
