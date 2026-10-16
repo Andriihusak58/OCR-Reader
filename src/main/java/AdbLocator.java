@@ -83,4 +83,47 @@ public final class AdbLocator {
         }
         return serials;
     }
+
+    /** LDPlayer exposes instance i on 127.0.0.1:(5555 + 2*i). Tries the first few; refused ports fail instantly. */
+    public static void connectLocal(String adbPath) {
+        for (int port = 5555; port <= 5561; port += 2) {
+            try {
+                Process p = new ProcessBuilder(adbPath, "connect", "127.0.0.1:" + port)
+                        .redirectErrorStream(true).start();
+                p.getInputStream().readAllBytes();
+                if (!p.waitFor(5, TimeUnit.SECONDS)) {
+                    p.destroyForcibly();
+                }
+            } catch (IOException e) {
+                return; // adb cannot be started at all - nothing else to try
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+    }
+
+    /**
+     * Returns the serial to use: the requested one if adb sees it, otherwise the first connected device.
+     * If adb sees nothing, tries "adb connect" to the usual LDPlayer ports first.
+     */
+    public static String resolveSerial(String adbPath, String requested) {
+        List<String> devices = listDevices(adbPath);
+        if (devices.contains(requested)) {
+            return requested;
+        }
+        if (devices.isEmpty()) {
+            System.out.println("ADB sees no devices, trying to connect to LDPlayer...");
+            connectLocal(adbPath);
+            devices = listDevices(adbPath);
+        }
+        if (!devices.isEmpty()) {
+            String chosen = devices.get(0);
+            if (!chosen.equals(requested)) {
+                System.out.println("ADB device '" + requested + "' not found, using '" + chosen + "'");
+            }
+            return chosen;
+        }
+        return requested;
+    }
 }

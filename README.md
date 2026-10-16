@@ -77,7 +77,7 @@ The bot reads `images/` (templates) and `tessdata/` (OCR data) from the **workin
 1. Launch the bot GUI
 2. Choose the input mode:
    - **Robot (PC screen)** — Clash of Clans is visible on your main screen
-   - **ADB (LDPlayer)** — the `adb.exe` path (bundled with LDPlayer) and device serial (default `emulator-5554`) are detected automatically when possible; otherwise set them manually, then click **Test connection**. The emulator must run at 1920x1080
+   - **ADB (LDPlayer)** — the `adb.exe` path (bundled with LDPlayer) and device serial (default `emulator-5554`) are detected automatically when possible; otherwise set them manually, then click **Test connection**. If adb sees no device, the bot tries `adb connect` to the usual LDPlayer ports (5555, 5557, ...) by itself. The emulator must run at 1920x1080
 3. Set target gold/elixir amounts (the bot stops once reached)
 3a. Optionally set **Stop after attacks** (0 or empty = no limit). The status bar shows how many attacks were completed in the current run, and the reason the bot stopped is shown when it finishes
 4. Click **Start Main Bot** or **Start Builder Bot**

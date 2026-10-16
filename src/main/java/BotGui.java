@@ -473,7 +473,19 @@ public class BotGui {
         final boolean adb = MODE_ADB.equals(modeBox.getSelectedItem());
         final String adbPath = adbPathField.getText().trim().isEmpty() ? "adb" : adbPathField.getText().trim();
         final String serial = serialField.getText().trim();
-        return adb ? () -> GameContext.adb(adbPath, serial) : GameContext::robot;
+        if (!adb) {
+            return GameContext::robot;
+        }
+        return () -> {
+            String device = AdbLocator.resolveSerial(adbPath, serial);
+            GameContext ctx = GameContext.adb(adbPath, device);
+            Region bounds = ctx.screen.bounds();
+            if (bounds.width != 1920 || bounds.height != 1080) {
+                throw new IllegalStateException("Emulator resolution is " + bounds.width + "x" + bounds.height
+                        + ", but 1920x1080 is required (LDPlayer > Settings > Game settings > Tablet 1920x1080)");
+            }
+            return ctx;
+        };
     }
 
     private void browseAdb() {
@@ -502,11 +514,11 @@ public class BotGui {
             try {
                 // if the typed serial is not connected but adb sees another device, use that one
                 String serial = typedSerial;
-                java.util.List<String> devices = AdbLocator.listDevices(adbPath);
-                if (!devices.isEmpty() && !devices.contains(serial)) {
-                    serial = devices.get(0);
-                    final String picked = serial;
-                    SwingUtilities.invokeLater(() -> serialField.setText(picked));
+                String picked = AdbLocator.resolveSerial(adbPath, serial);
+                if (!picked.equals(serial)) {
+                    serial = picked;
+                    final String shown = picked;
+                    SwingUtilities.invokeLater(() -> serialField.setText(shown));
                 }
                 Region bounds = new AdbScreenSource(new Adb(adbPath, serial)).bounds();
                 boolean ok = bounds.width == 1920 && bounds.height == 1080;
