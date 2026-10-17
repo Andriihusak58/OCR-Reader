@@ -79,8 +79,28 @@ public final class Updater {
         progress.say("Update downloaded. Restarting...");
     }
 
+    /** Downloads with a few retries: some networks drop the first TLS handshake to the GitHub download hosts. */
     private static void download(String url, Path target, Progress progress) throws Exception {
+        Exception last = null;
+        for (int attempt = 1; attempt <= 3; attempt++) {
+            try {
+                downloadOnce(url, target, progress);
+                return;
+            } catch (java.io.IOException e) {
+                last = e;
+                Files.deleteIfExists(target);
+                if (attempt < 3) {
+                    progress.say("Download failed (" + e.getMessage() + "), retrying...");
+                    Thread.sleep(2000L * attempt);
+                }
+            }
+        }
+        throw last;
+    }
+
+    private static void downloadOnce(String url, Path target, Progress progress) throws Exception {
         HttpClient client = HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
                 .connectTimeout(Duration.ofSeconds(10))
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 .build();
