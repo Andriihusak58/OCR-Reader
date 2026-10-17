@@ -79,6 +79,9 @@ public class BotGui {
     private JTextArea logArea;
 
     public static void main(String[] args) {
+        // Java 24+ offers post-quantum key shares in the TLS hello; some networks/firewalls drop such a
+        // handshake ("Remote host terminated the handshake"). GitHub works fine with the classic groups.
+        System.setProperty("jdk.tls.namedGroups", "x25519,secp256r1,secp384r1,secp521r1");
         setupLookAndFeel();
         SwingUtilities.invokeLater(() -> new BotGui().create());
     }
