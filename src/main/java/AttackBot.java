@@ -5,12 +5,15 @@ public class AttackBot {
     private final BattleBarScanner scanner;
     private final Actions actions;
     private final Random random = new Random();
+    private final RewardPicker rewardPicker;
+    private long lastRewardCheck = 0;
 
     private volatile boolean running = true;
 
-    public AttackBot(GameContext ctx) {
+    public AttackBot(GameContext ctx, int rewardChoice) {
         this.scanner = new BattleBarScanner(ctx.screen);
         this.actions = ctx.actions;
+        this.rewardPicker = new RewardPicker(ctx, rewardChoice);
     }
 
     public void stop() {
@@ -22,17 +25,31 @@ public class AttackBot {
     }
 
     private void sleep(int minMs, int randomAddMs) throws InterruptedException {
-        int total = minMs + random.nextInt(randomAddMs);
-        int waited = 0;
+        long end = System.currentTimeMillis() + minMs + random.nextInt(randomAddMs);
 
-        while (waited < total) {
+        while (System.currentTimeMillis() < end) {
             if (shouldStop()) {
                 return;
             }
 
+            checkReward();
             Thread.sleep(100);
-            waited += 100;
         }
+    }
+
+    // The 33% / 66% reward screen pauses the attack until a card is picked; look for it every ~2 s
+    private void checkReward() throws InterruptedException {
+        long now = System.currentTimeMillis();
+        if (now - lastRewardCheck < 2000) return;
+        lastRewardCheck = now;
+        try {
+            rewardPicker.handle();
+        } catch (InterruptedException e) {
+            throw e;
+        } catch (RuntimeException e) {
+            System.out.println("Reward check failed: " + e.getMessage());
+        }
+        lastRewardCheck = System.currentTimeMillis();
     }
 
     public boolean attack() throws Exception {

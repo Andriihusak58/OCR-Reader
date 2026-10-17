@@ -11,7 +11,7 @@ public class FarmingBot {
     public FarmingBot(BotConfig config, GameContext ctx) throws Exception {
         this.config = config;
         this.searchBot = new SearchBot(config, ctx);
-        this.attackBot = new AttackBot(ctx);
+        this.attackBot = new AttackBot(ctx, config.rewardChoice);
         this.ocrService = new OcrService(ctx.screen);
     }
 

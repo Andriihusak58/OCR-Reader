@@ -58,6 +58,7 @@ public class BotGui {
     private JTextField builderElixirField;
     private JTextField mainMaxAttacksField;
     private JTextField builderMaxAttacksField;
+    private JComboBox<String> rewardBox;
     private JLabel attacksLabel;
     private volatile String stopReason;
 
@@ -234,6 +235,8 @@ public class BotGui {
         builderMaxAttacksField = new JTextField(10);
         mainMaxAttacksField.putClientProperty("JTextField.placeholderText", "0 = no limit");
         builderMaxAttacksField.putClientProperty("JTextField.placeholderText", "0 = no limit");
+        rewardBox = new JComboBox<>(new String[]{"Left card", "Middle card", "Right card"});
+        rewardBox.setSelectedIndex(RewardPicker.RIGHT);
         attacksLabel = new JLabel("Attacks: 0");
 
         tgEnabled = new JCheckBox("Send a message when the bot stops");
@@ -320,7 +323,8 @@ public class BotGui {
         addRow(main, c, 1, "Target elixir", mainElixirField, null);
         addRow(main, c, 2, "Enemy min loot", enemyLootField, null);
         addRow(main, c, 3, "Stop after attacks", mainMaxAttacksField, null);
-        addButtonRow(main, c, 4, startMain);
+        addRow(main, c, 4, "Reward at 33%/66%", rewardBox, null);
+        addButtonRow(main, c, 5, startMain);
 
         JPanel builder = titledPanel("Builder base");
         c = baseConstraints();
@@ -767,6 +771,7 @@ public class BotGui {
         builderElixirField.setEnabled(idle);
         mainMaxAttacksField.setEnabled(idle);
         builderMaxAttacksField.setEnabled(idle);
+        rewardBox.setEnabled(idle);
 
         startMain.setEnabled(idle);
         startBuilder.setEnabled(idle);
@@ -784,6 +789,7 @@ public class BotGui {
         config.builderTargetElixir = parseNumber(builderElixirField, "Builder target elixir");
         config.mainMaxAttacks = parseOptionalNumber(mainMaxAttacksField, "Main attack limit");
         config.builderMaxAttacks = parseOptionalNumber(builderMaxAttacksField, "Builder attack limit");
+        config.rewardChoice = rewardBox.getSelectedIndex();
         return config;
     }
 
@@ -830,6 +836,7 @@ public class BotGui {
         tgChatField.setText(prefs.get("tgChatId", ""));
         mainMaxAttacksField.setText(prefs.get("mainMaxAttacks", "0"));
         builderMaxAttacksField.setText(prefs.get("builderMaxAttacks", "0"));
+        rewardBox.setSelectedIndex(Math.max(0, Math.min(2, prefs.getInt("rewardChoice", RewardPicker.RIGHT))));
 
         alwaysOnTop.setSelected(prefs.getBoolean("alwaysOnTop", false));
         frame.setAlwaysOnTop(alwaysOnTop.isSelected());
@@ -850,6 +857,7 @@ public class BotGui {
         prefs.put("tgChatId", tgChatField.getText().trim());
         prefs.put("mainMaxAttacks", mainMaxAttacksField.getText().trim());
         prefs.put("builderMaxAttacks", builderMaxAttacksField.getText().trim());
+        prefs.putInt("rewardChoice", rewardBox.getSelectedIndex());
 
         prefs.putBoolean("alwaysOnTop", alwaysOnTop.isSelected());
     }
