@@ -75,6 +75,9 @@
                                         <exclude>META-INF/*.SF</exclude>
                                         <exclude>META-INF/*.DSA</exclude>
                                         <exclude>META-INF/*.RSA</exclude>
+                                        <!-- the bot is Windows-only: drop Linux/macOS OpenCV natives (~70 MB) -->
+                                        <exclude>nu/pattern/opencv/linux/**</exclude>
+                                        <exclude>nu/pattern/opencv/osx/**</exclude>
                                     </excludes>
 
                                 </filter>
