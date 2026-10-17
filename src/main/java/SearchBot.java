@@ -102,7 +102,8 @@ public class SearchBot {
 
         collectAndZoomOut();
 
-        if (!bot.pressIfFound(UiElements.ATTACK)) return false;
+        // the Battle button has two looks (chest on a map / sword): try both
+        if (!bot.pressIfFound(UiElements.ATTACK) && !bot.pressIfFound(UiElements.ATTACK_2)) return false;
         sleep(400, 150);
         if (shouldStop()) return false;
 

@@ -30,6 +30,7 @@ public class UiElements {
     public static final UiElement RETURN_HOME_DC;
     public static final UiElement COLLECT;
     public static final UiElement CASE;
+    public static final UiElement ATTACK_2;
     public static final UiElement CONTINUE;
     public static final UiElement PICK_REWARD;
     public static final UiElement DRAGONDUKE;
@@ -49,6 +50,7 @@ public class UiElements {
         RETURN_HOME = new UiElement(Regions.RETURN_HOME,"images/RETURN_HOME.png", DEFAULT_THRESHOLD);
         OKAY_STAR_BONUS = new UiElement(Regions.OKAY_STAR_BONUS,"images/OKAY_STAR_BONUS.png", DEFAULT_THRESHOLD);
         OKAY_STAR_BONUS_DC = new UiElement(Regions.OKAY_STAR_BONUS_DC,"images/OKAY_STAR_BONUS_DC.png", DEFAULT_THRESHOLD);
+        ATTACK_2 = new UiElement(Regions.ATTACK, "images/ATTACK_2.png", DEFAULT_THRESHOLD);
         CONTINUE = new UiElement(Regions.CONTINUE,"images/CONTINUE.png", DEFAULT_THRESHOLD);
         PICK_REWARD = new UiElement(Regions.PICK_REWARD,"images/PICK_REWARD.png", DEFAULT_THRESHOLD);
 
