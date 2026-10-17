@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3710a1f7-8ff6-4314-a643-a750cbf7b6e2" name="Changes" comment="Initial commit" />
+    <list default="true" id="3710a1f7-8ff6-4314-a643-a750cbf7b6e2" name="Changes" comment="Initial commit">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -70,7 +72,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.BotGui">
+  <component name="RunManager" selected="Application.ButtonReader">
     <configuration name="BotGui" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="BotGui" />
       <module name="BotOCR" />
@@ -108,8 +110,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.BotGui" />
         <item itemvalue="Application.ButtonReader" />
+        <item itemvalue="Application.BotGui" />
         <item itemvalue="Application.koordinaten" />
         <item itemvalue="Application.ZoomTest" />
         <item itemvalue="Application.Builder" />
@@ -318,7 +320,15 @@
       <option name="project" value="LOCAL" />
       <updated>1792240372371</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1792240560730</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1792240560730</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
