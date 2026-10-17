@@ -149,7 +149,6 @@ public final class Updater {
         return String.join("\r\n",
                 "@echo off",
                 "cd /d \"%~dp0\"",
-                "copy /y \"BotOCR.jar\" \"BotOCR.jar.bak\" >nul 2>&1",
                 "set tries=0",
                 ":retry",
                 "ping -n 2 127.0.0.1 >nul",
@@ -164,6 +163,15 @@ public final class Updater {
                 start,
                 "(goto) 2>nul & del \"%~f0\"",
                 "");
+    }
+
+    /** Removes the BotOCR.jar.bak left by older versions of the updater. */
+    public static void deleteOldBackup() {
+        try {
+            Path jar = runningJar();
+            if (jar != null) Files.deleteIfExists(jar.resolveSibling("BotOCR.jar.bak"));
+        } catch (Exception ignored) {
+        }
     }
 
     /** Starts the swap script as a separate process. The caller must exit the JVM right after. */
