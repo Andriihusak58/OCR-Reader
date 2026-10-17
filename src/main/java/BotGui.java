@@ -147,6 +147,7 @@ public class BotGui {
         frame.setVisible(true);
 
         System.out.println("Ready. Press " + STOP_KEY_NAME + " at any time to stop the bot.");
+        Updater.deleteOldBackup();
         checkForUpdates();
     }
 
