@@ -95,7 +95,64 @@ public final class Updater {
                 }
             }
         }
-        throw last;
+        // Java's TLS to the download host keeps failing on some PCs: use the system downloader instead
+        progress.say("Java download failed (" + describe(last) + "), trying the system downloader...");
+        try {
+            downloadWithSystemTool(url, target);
+        } catch (Exception e) {
+            Files.deleteIfExists(target);
+            throw new java.io.IOException("Download failed: " + describe(last) + "; system downloader: " + e.getMessage(), last);
+        }
+    }
+
+    private static String describe(Exception e) {
+        Throwable root = e;
+        while (root.getCause() != null && root.getCause() != root) root = root.getCause();
+        return root == e ? String.valueOf(e.getMessage()) : e.getMessage() + " / " + root;
+    }
+
+    /** curl.exe ships with Windows 10+ and uses the Windows TLS stack; PowerShell is the second choice. */
+    static void downloadWithSystemTool(String url, Path target) throws Exception {
+        boolean windows = System.getProperty("os.name", "").toLowerCase().contains("win");
+        Exception curlError;
+        try {
+            runTool(java.util.List.of(windows ? "curl.exe" : "curl", "-L", "--fail", "--silent", "--show-error",
+                    "--retry", "2", "-o", target.toString(), url));
+            checkDownloaded(target);
+            return;
+        } catch (Exception e) {
+            curlError = e;
+            Files.deleteIfExists(target);
+        }
+        if (!windows) throw curlError;
+
+        String ps = "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; "
+                + "$ProgressPreference = 'SilentlyContinue'; "
+                + "Invoke-WebRequest -UseBasicParsing -Uri '" + url + "' -OutFile '" + target + "'";
+        try {
+            runTool(java.util.List.of("powershell.exe", "-NoProfile", "-NonInteractive", "-Command", ps));
+            checkDownloaded(target);
+        } catch (Exception e) {
+            throw new IllegalStateException("curl: " + curlError.getMessage() + "; powershell: " + e.getMessage());
+        }
+    }
+
+    private static void runTool(java.util.List<String> command) throws Exception {
+        Process p = new ProcessBuilder(command).redirectErrorStream(true).start();
+        String output = new String(p.getInputStream().readAllBytes()).trim();
+        if (!p.waitFor(10, java.util.concurrent.TimeUnit.MINUTES)) {
+            p.destroyForcibly();
+            throw new IllegalStateException("timed out");
+        }
+        if (p.exitValue() != 0) {
+            throw new IllegalStateException("exit " + p.exitValue() + (output.isEmpty() ? "" : ": " + output));
+        }
+    }
+
+    private static void checkDownloaded(Path target) throws Exception {
+        long size = Files.exists(target) ? Files.size(target) : 0;
+        if (size == 0) throw new IllegalStateException("empty file");
+        if (size > MAX_BYTES) throw new IllegalStateException("file is too large");
     }
 
     private static void downloadOnce(String url, Path target, Progress progress) throws Exception {
