@@ -6,6 +6,7 @@ public class AttackBot {
     private final Actions actions;
     private final Random random = new Random();
     private final RewardPicker rewardPicker;
+    private final Bot bot;
     private long lastRewardCheck = 0;
 
     private volatile boolean running = true;
@@ -14,6 +15,7 @@ public class AttackBot {
         this.scanner = new BattleBarScanner(ctx.screen);
         this.actions = ctx.actions;
         this.rewardPicker = new RewardPicker(ctx, rewardChoice);
+        this.bot = new Bot(ctx);
     }
 
     public void stop() {
@@ -323,20 +325,59 @@ public class AttackBot {
         sleep(sleepMin, sleepRandom);
     }
 
+    /**
+     * Leaves the battle step by step, looking at the screen each time instead of clicking blindly:
+     * the 33% / 66% reward screen can appear at any moment (it hides the Surrender button and the
+     * confirmation dialog), so after picking the reward we simply start over.
+     */
     private void finishBattle() throws Exception {
+        long deadline = System.currentTimeMillis() + 45_000;
+        boolean confirmed = false; // Surrender was confirmed, now waiting for the Return Home screen
+        int misses = 0;
+
+        while (System.currentTimeMillis() < deadline) {
+            if (shouldStop()) return;
+
+            if (rewardPicker.handle()) {
+                confirmed = false;
+                misses = 0;
+                sleep(500, 500);
+                continue;
+            }
+
+            if (bot.pressIfFound(UiElements.RETURN_HOME)) {
+                sleep(1500, 2500);
+                return;
+            }
+
+            if (confirmed) {
+                // the Return Home template did not match: after a few tries click its place anyway
+                if (++misses >= 4) {
+                    actions.click(Regions.RETURN_HOME);
+                    sleep(1500, 2500);
+                    return;
+                }
+                sleep(1000, 500);
+                continue;
+            }
+
+            if (bot.pressIfFound(UiElements.SURRENDER_OKAY)) {
+                confirmed = true;
+                sleep(2500, 2500);
+                continue;
+            }
+
+            actions.click(Regions.SURRENDER);
+            sleep(700, 1000);
+        }
+
         if (shouldStop()) return;
 
-        actions.click(Regions.SURRENDER);
-        sleep(700, 1000);
-
-        if (shouldStop()) return;
-
+        System.out.println("Could not confirm leaving the battle, trying the old blind clicks");
         actions.click(Regions.SURRENDER_OKAY);
         sleep(2500, 2500);
-
         if (shouldStop()) return;
-
         actions.click(Regions.RETURN_HOME);
         sleep(1500, 2500);
     }
-}
+}
