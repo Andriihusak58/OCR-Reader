@@ -98,6 +98,11 @@ public class BotGui {
     private void create() {
         frame = new JFrame("BotOCR " + UpdateChecker.VERSION + " - Clash of Clans bot");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        try {
+            java.net.URL icon = BotGui.class.getResource("/icon.png");
+            if (icon != null) frame.setIconImage(new ImageIcon(icon).getImage());
+        } catch (Exception ignored) {
+        }
 
         buildComponents();
 
