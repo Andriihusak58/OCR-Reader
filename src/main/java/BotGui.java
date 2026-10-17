@@ -150,19 +150,57 @@ public class BotGui {
             UpdateChecker.Update update = UpdateChecker.check();
             if (update == null) return;
             System.out.println("New version " + update.version() + " is available: " + update.url());
-            SwingUtilities.invokeLater(() -> {
-                int choice = JOptionPane.showOptionDialog(frame,
-                        "A new version " + update.version() + " is available (you have " + UpdateChecker.VERSION + ").",
-                        "Update available", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
-                        new Object[]{"Open download page", "Later"}, "Open download page");
-                if (choice == 0) {
+            SwingUtilities.invokeLater(() -> offerUpdate(update));
+        }, "update-check");
+        t.setDaemon(true);
+        t.start();
+    }
+
+    private void offerUpdate(UpdateChecker.Update update) {
+        boolean auto = update.jarUrl() != null && Updater.canSelfUpdate();
+        String message = "A new version " + update.version() + " is available (you have " + UpdateChecker.VERSION + ").";
+        Object[] options = auto
+                ? new Object[]{"Update now", "Open download page", "Later"}
+                : new Object[]{"Open download page", "Later"};
+        int choice = JOptionPane.showOptionDialog(frame, message, "Update available",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+        String picked = choice >= 0 ? String.valueOf(options[choice]) : "Later";
+        if (picked.equals("Open download page")) {
+            try {
+                Desktop.getDesktop().browse(java.net.URI.create(update.url()));
+            } catch (Exception ignored) {
+            }
+        } else if (picked.equals("Update now")) {
+            installUpdate(update);
+        }
+    }
+
+    private void installUpdate(UpdateChecker.Update update) {
+        stopAll();
+        setStatus("Updating...", GRAY);
+        Thread t = new Thread(() -> {
+            try {
+                java.nio.file.Path appDir = Updater.runningJar().toAbsolutePath().getParent();
+                Updater.stage(appDir, update.jarUrl(), update.imagesUrl(), Updater.ALLOWED_PREFIX, System.out::println);
+                Updater.launchSwap(appDir);
+                SwingUtilities.invokeLater(() -> {
+                    saveSettings();
                     try {
-                        Desktop.getDesktop().browse(java.net.URI.create(update.url()));
+                        GlobalScreen.unregisterNativeHook();
                     } catch (Exception ignored) {
                     }
-                }
-            });
-        }, "update-check");
+                    System.exit(0);
+                });
+            } catch (Exception e) {
+                System.out.println("Update failed: " + e.getMessage());
+                SwingUtilities.invokeLater(() -> {
+                    setStatus("Idle", GRAY);
+                    JOptionPane.showMessageDialog(frame,
+                            "Update failed: " + e.getMessage() + "\nYou can download the new version manually:\n" + update.url(),
+                            "Update", JOptionPane.ERROR_MESSAGE);
+                });
+            }
+        }, "self-update");
         t.setDaemon(true);
         t.start();
     }

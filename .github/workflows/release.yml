@@ -1,0 +1,32 @@
+name: Release assets
+
+# When a GitHub release is published, build the jar and attach the files the in-app updater downloads:
+#   BotOCR.jar  - the fat jar
+#   images.zip  - the images/ templates folder
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Build
+        run: mvn -B -DskipTests package
+      - name: Prepare assets
+        run: |
+          cp target/BotOCR-1.0-SNAPSHOT.jar BotOCR.jar
+          zip -r images.zip images
+      - name: Attach to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ github.event.release.tag_name }}" BotOCR.jar images.zip --clobber

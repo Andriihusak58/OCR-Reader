@@ -17,7 +17,8 @@ public final class UpdateChecker {
     private static final String LATEST_URL =
             "https://api.github.com/repos/Andriihusak58/OCR-Reader/releases/latest";
 
-    public record Update(String version, String url) {
+    /** jarUrl / imagesUrl are the release assets BotOCR.jar and images.zip (null if not attached). */
+    public record Update(String version, String url, String jarUrl, String imagesUrl) {
     }
 
     private UpdateChecker() {
@@ -48,7 +49,16 @@ public final class UpdateChecker {
         String url = field(json, "html_url");
         if (tag == null || url == null) return null;
         String version = tag.startsWith("v") || tag.startsWith("V") ? tag.substring(1) : tag;
-        return isNewer(version, currentVersion) ? new Update(version, url) : null;
+        if (!isNewer(version, currentVersion)) return null;
+        return new Update(version, url, asset(json, "BotOCR.jar"), asset(json, "images.zip"));
+    }
+
+    private static String asset(String json, String fileName) {
+        Matcher m = Pattern.compile("\"browser_download_url\"\\s*:\\s*\"([^\"]*)\"").matcher(json);
+        while (m.find()) {
+            if (m.group(1).endsWith("/" + fileName)) return m.group(1);
+        }
+        return null;
     }
 
     /** First occurrence of "name": "value" (top-level release fields come before nested ones). */
