@@ -96,7 +96,7 @@ public class BotGui {
     // ------------------------------------------------------------------ build
 
     private void create() {
-        frame = new JFrame("BotOCR - Clash of Clans bot");
+        frame = new JFrame("BotOCR " + UpdateChecker.VERSION + " - Clash of Clans bot");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         buildComponents();
@@ -142,6 +142,29 @@ public class BotGui {
         frame.setVisible(true);
 
         System.out.println("Ready. Press " + STOP_KEY_NAME + " at any time to stop the bot.");
+        checkForUpdates();
+    }
+
+    private void checkForUpdates() {
+        Thread t = new Thread(() -> {
+            UpdateChecker.Update update = UpdateChecker.check();
+            if (update == null) return;
+            System.out.println("New version " + update.version() + " is available: " + update.url());
+            SwingUtilities.invokeLater(() -> {
+                int choice = JOptionPane.showOptionDialog(frame,
+                        "A new version " + update.version() + " is available (you have " + UpdateChecker.VERSION + ").",
+                        "Update available", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
+                        new Object[]{"Open download page", "Later"}, "Open download page");
+                if (choice == 0) {
+                    try {
+                        Desktop.getDesktop().browse(java.net.URI.create(update.url()));
+                    } catch (Exception ignored) {
+                    }
+                }
+            });
+        }, "update-check");
+        t.setDaemon(true);
+        t.start();
     }
 
     private void buildComponents() {

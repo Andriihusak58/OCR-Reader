@@ -58,6 +58,10 @@ This is a personal/educational automation project. Using bots in Clash of Clans 
 
 ## Running a prebuilt copy (sharing with a friend)
 
+**Easiest:** download the latest `BotOCR-x.y.z.zip` from the [Releases page](https://github.com/Andriihusak58/OCR-Reader/releases/latest), unzip it and run `BotOCR.exe` (Java is bundled). On start the bot checks GitHub and tells you when a newer release is available; to update, download the new zip and replace the old folder (your settings are kept).
+
+Manual build:
+
 The bot reads `images/` (templates) and `tessdata/` (OCR data) from the **working directory**, so they must sit next to the jar.
 
 1. Build: `mvn clean package`
