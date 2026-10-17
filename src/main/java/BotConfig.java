@@ -8,6 +8,9 @@ public class BotConfig {
     public int mainMaxAttacks = 0;
     public int builderMaxAttacks = 0;
 
+    // which card to take on the "Pick a Reward!" screen at 33% / 66% damage: 0 = left, 1 = middle, 2 = right
+    public int rewardChoice = RewardPicker.RIGHT;
+
     public int builderTargetGold = 4_500_000;
     public int builderTargetElixir = 4_500_000;
 

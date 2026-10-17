@@ -31,6 +31,7 @@ public class UiElements {
     public static final UiElement COLLECT;
     public static final UiElement CASE;
     public static final UiElement CONTINUE;
+    public static final UiElement PICK_REWARD;
     public static final UiElement DRAGONDUKE;
     public static final UiElement Battle_COPTER;
     public static final UiElement MINIONPRINCE;
@@ -49,6 +50,7 @@ public class UiElements {
         OKAY_STAR_BONUS = new UiElement(Regions.OKAY_STAR_BONUS,"images/OKAY_STAR_BONUS.png", DEFAULT_THRESHOLD);
         OKAY_STAR_BONUS_DC = new UiElement(Regions.OKAY_STAR_BONUS_DC,"images/OKAY_STAR_BONUS_DC.png", DEFAULT_THRESHOLD);
         CONTINUE = new UiElement(Regions.CONTINUE,"images/CONTINUE.png", DEFAULT_THRESHOLD);
+        PICK_REWARD = new UiElement(Regions.PICK_REWARD,"images/PICK_REWARD.png", DEFAULT_THRESHOLD);
 
         KING = new UiElement(Regions.KING,"images/KING.png", DEFAULT_THRESHOLD);
         QUEEN = new UiElement(Regions.QUEEN,"images/QUEEN.png", DEFAULT_THRESHOLD);

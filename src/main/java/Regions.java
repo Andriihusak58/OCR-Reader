@@ -14,6 +14,10 @@ public class Regions {
     public static final Region COLLECT = new Region(1300,880,200,75);
     public static final Region CASE = new Region(757,738,310,110);
     public static final Region CONTINUE = new Region(820, 920, 300, 130);
+    public static final Region PICK_REWARD = new Region(780, 140, 370, 95);
+    public static final Region REWARD_LEFT = new Region(470, 380, 250, 380);
+    public static final Region REWARD_MIDDLE = new Region(845, 380, 250, 380);
+    public static final Region REWARD_RIGHT = new Region(1230, 380, 250, 380);
 
     public static final Region Attack_DC = new Region(28, 862, 198, 198);
     public static final Region Find_Now = new Region(1244,650,340,120);
