@@ -43,54 +43,42 @@ public class SearchBot {
         clearPopups();
     }
 
-    private void clearPopups() throws Exception {
-
-        if (bot.pressIfFound(UiElements.OKAY_STAR_BONUS)) {
-            sleep(300, 390);
-        }
-
+    private void tapChestAndContinue(UiElement continueBtn, Region continueRegion) throws Exception {
+        sleep(2250, 150);
         if (shouldStop()) return;
 
-        if (bot.pressIfFound(UiElements.CASE)) {
-            sleep(150, 150);
-            if (shouldStop()) return;
-
+        for (int i = 0; i < 3; i++) {
             actions.battleClick(Regions.CASE);
             sleep(150, 150);
             if (shouldStop()) return;
+        }
+        actions.battleClick(Regions.CASE);
+        sleep(4150, 150);
+        if (shouldStop()) return;
 
-            actions.battleClick(Regions.CASE);
-            sleep(150, 150);
-            if (shouldStop()) return;
-
-            actions.battleClick(Regions.CASE);
-            sleep(150, 150);
-            if (shouldStop()) return;
-
-            actions.battleClick(Regions.CASE);
-            sleep(4150, 150);
-            if (shouldStop()) return;
-
-            // Wait for the Continue button and press it by template (retry instead of a blind click)
-            boolean continued = false;
-            for (int i = 0; i < 8 && !continued; i++) {
-                continued = bot.pressIfFound(UiElements.CONTINUE);
-                if (!continued) {
-                    sleep(500, 150);
-                    if (shouldStop()) return;
-                }
-            }
+        boolean continued = false;
+        for (int i = 0; i < 8 && !continued; i++) {
+            continued = bot.pressIfFound(continueBtn);
             if (!continued) {
-                System.out.println("CONTINUE not found, clicking its region");
-                actions.battleClick(Regions.CONTINUE);
+                sleep(500, 150);
+                if (shouldStop()) return;
             }
-            sleep(200, 150);
-            if (shouldStop()) return;
         }
+        if (!continued) {
+            System.out.println(continueBtn + " not found, clicking its region");
+            actions.battleClick(continueRegion);
+        }
+        sleep(2200, 150);
+    }
 
-        if (bot.pressIfFound(UiElements.OKAY_STAR_BONUS)) {
-            sleep(150, 150);
-        }
+    private void clearPopups() throws Exception {
+
+        if (shouldStop()) return;
+        if (bot.pressIfFound(UiElements.CASE))    tapChestAndContinue(UiElements.CONTINUE, Regions.CONTINUE);
+        if (shouldStop()) return;
+        if (bot.pressIfFound(UiElements.CLAIM))   tapChestAndContinue(UiElements.CONTINUE_CLAIM, Regions.CONTINUE_CLAIM);
+        if (shouldStop()) return;
+        if (bot.pressIfFound(UiElements.CLAIM_1)) tapChestAndContinue(UiElements.CONTINUE_CLAIM, Regions.CONTINUE_CLAIM);
     }
 
     private void collectAndZoomOut() throws Exception {
@@ -106,6 +94,9 @@ public class SearchBot {
         if (!bot.pressIfFound(UiElements.ATTACK) && !bot.pressIfFound(UiElements.ATTACK_2)) return false;
         sleep(400, 150);
         if (shouldStop()) return false;
+
+
+
 
         if (!bot.pressIfFound(UiElements.FIND_MATCH)) return false;
         sleep(400, 150);

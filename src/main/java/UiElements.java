@@ -1,7 +1,5 @@
 public class UiElements {
 
-    // Поріг схожості для OpenCV (TM_CCOEFF_NORMED): правильний збіг ~0.95+, схожа інша кнопка ~0.4.
-    // Стартове значення; точніше підбирається для кожного елемента через tools/MatchTest.
     private static final double DEFAULT_THRESHOLD = 0.5;
 
     public static final UiElement FIND_MATCH;
@@ -18,6 +16,9 @@ public class UiElements {
     public static final UiElement VALKYRIE;
     public static final UiElement JUMP_SPELL;
     public static final UiElement OKAY_STAR_BONUS;
+    public static final UiElement CLAIM;
+    public static final UiElement CLAIM_1;
+    public static final UiElement CONTINUE_CLAIM;
     public static final UiElement OKAY_STAR_BONUS_DC;
     public static final UiElement DRAGON;
     public static final UiElement WIZARD;
@@ -49,6 +50,9 @@ public class UiElements {
         SURRENDER_OKAY = new UiElement(Regions.SURRENDER_OKAY,"images/SURRENDER_OKAY.png", DEFAULT_THRESHOLD);
         RETURN_HOME = new UiElement(Regions.RETURN_HOME,"images/RETURN_HOME.png", DEFAULT_THRESHOLD);
         OKAY_STAR_BONUS = new UiElement(Regions.OKAY_STAR_BONUS,"images/OKAY_STAR_BONUS.png", DEFAULT_THRESHOLD);
+        CLAIM = new UiElement(Regions.CLAIM, "images/CLAIM.png", DEFAULT_THRESHOLD);
+        CLAIM_1 = new UiElement(Regions.CLAIM_1, "images/CLAIM_1.png", DEFAULT_THRESHOLD);
+        CONTINUE_CLAIM = new UiElement(Regions.CONTINUE_CLAIM, "images/CONTINUE_CLAIM.png", DEFAULT_THRESHOLD);
         OKAY_STAR_BONUS_DC = new UiElement(Regions.OKAY_STAR_BONUS_DC,"images/OKAY_STAR_BONUS_DC.png", DEFAULT_THRESHOLD);
         ATTACK_2 = new UiElement(Regions.ATTACK, "images/ATTACK_2.png", DEFAULT_THRESHOLD);
         CONTINUE = new UiElement(Regions.CONTINUE,"images/CONTINUE.png", DEFAULT_THRESHOLD);

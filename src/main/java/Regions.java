@@ -1,6 +1,6 @@
 public class Regions {
     public static final Region ATTACK = new Region(28, 862, 198, 198);
-    public static final Region FIND_MATCH = new Region(115, 735, 430, 130);
+    public static final Region FIND_MATCH = new Region(60, 715, 480, 170);
     public static final Region FIND_MATCH_1 = new Region(663, 735, 430, 130);
     public static final Region ATTACK_GO = new Region(1530, 923, 320, 80);
     public static final Region NEXT = new Region(1598, 699, 300, 135);
@@ -9,6 +9,9 @@ public class Regions {
     public static final Region SURRENDER_OKAY = new Region(1000, 614, 330, 140);
     public static final Region RETURN_HOME = new Region(837, 877, 250, 100);
     public static final Region OKAY_STAR_BONUS = new Region(835, 865, 250, 105);
+    public static final Region CLAIM = new Region(780, 770, 360, 160);
+    public static final Region CLAIM_1 = new Region(730, 830, 440, 150);
+    public static final Region CONTINUE_CLAIM = new Region(750, 845, 390, 160);
     public static final Region OKAY_STAR_BONUS_DC = new Region(825, 787, 250, 105);
     public static final Region ELIXIR_CART = new Region(1370, 2,20,30);
     public static final Region COLLECT = new Region(1300,880,200,75);

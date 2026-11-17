@@ -222,10 +222,10 @@ public class AttackBot {
         actions.battleClick(layout.dragon);
         sleep(300, 450);
 
-        holdPoint(Regions.POINT_3, 900, 200, 300, 450);
-        holdPoint(Regions.POINT_4, 900, 200, 300, 450);
-        holdPoint(Regions.POINT_5, 900, 200, 300, 450);
-        holdPoint(Regions.POINT_6, 900, 200, 300, 450);
+        holdPoint(Regions.POINT_3, 600, 200, 300, 450);
+        holdPoint(Regions.POINT_4, 600, 200, 300, 450);
+        holdPoint(Regions.POINT_5, 600, 200, 300, 450);
+        holdPoint(Regions.POINT_6, 600, 200, 300, 450);
         holdPoint(Regions.POINT_2, 1900, 200, 300, 450);
     }
 
